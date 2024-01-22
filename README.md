@@ -1,4 +1,7 @@
- <h1 align="center">ĐỒ ÁN TỐT NGHIỆP - TRƯỜNG ĐẠI HỌC MỞ HÀ NỘI </h1>
+ <h1 align="center">ĐỒ ÁN TỐT NGHIỆP</h1>
+ <h1 align="center">TRƯỜNG ĐẠI HỌC MỞ HÀ NỘI </br>
+KHOA CÔNG NGHỆ THÔNG TIN</h1>
+
  <h2 align="center">ỨNG DỤNG HỖ TRỢ BÁN HÀNG CHO CỬA HÀNG THỜI TRANG GOLDIE</h2>
 
 <p align="center">
