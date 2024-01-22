@@ -1,8 +1,10 @@
-package fithou.duogwas.goldie;
+package fithou.duogwas.goldie.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import fithou.duogwas.goldie.R;
 
 public class MainActivity extends AppCompatActivity {
 
