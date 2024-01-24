@@ -12,13 +12,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
+import fithou.duogwas.goldie.Model.LoginDto;
 import fithou.duogwas.goldie.Model.User;
 import fithou.duogwas.goldie.R;
+import fithou.duogwas.goldie.Request.TokenDto;
+import fithou.duogwas.goldie.Response.ErrorResponse;
 import fithou.duogwas.goldie.Retrofit.ApiService;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.RetrofitClient;
+import fithou.duogwas.goldie.Retrofit.UserService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,52 +71,38 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             edtPassword.requestFocus();
         }
 
-        User userLoginRequest = new User(username, password);
-        ApiService apiService = ApiUtils.getAPIService();
-        Call<User> call = apiService.Login(userLoginRequest);
-        call.enqueue(new Callback<User>() {
+        LoginDto loginDto = new LoginDto(username, password, "string");
+        UserService userService = ApiUtils.getUserAPIService();
+        Call<TokenDto> call1 = userService.SignIn(loginDto);
+        call1.enqueue(new Callback<TokenDto>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful()){
-                    User user = response.body();
+            public void onResponse(Call<TokenDto> call, Response<TokenDto> response) {
+                if (response.isSuccessful()) {
                     Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                     startActivity(intent);
-                    Toast.makeText(SignInActivity.this, user.toString(), Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(SignInActivity.this, "đăng nhập thất bại", Toast.LENGTH_SHORT).show();
-                    Log.e("err",String.valueOf(response.code()));
+                    finish();
+                    Toast.makeText(SignInActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Response không thành công, chuyển đổi thành ErrorResponse
+                    ErrorResponse errorResponse = null;
+                    try {
+                        errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (errorResponse != null) {
+                        String defaultMessage = errorResponse.getDefaultMessage();
+                        Toast.makeText(SignInActivity.this, defaultMessage, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
-
+            public void onFailure(Call<TokenDto> call, Throwable t) {
+                Toast.makeText(SignInActivity.this, "Lỗi kết nối API", Toast.LENGTH_SHORT).show();
+                Log.e("SignInErr", t.getMessage());
             }
         });
-
-
-//        ApiService.API_SERVICE.Login(username,password).enqueue(new Callback<User>() {
-//            @Override
-//            public void onResponse(Call<User> call, Response<User> response) {
-//                Log.e("Login code: ", String.valueOf(response.code()));
-//                if(response.isSuccessful()){
-//                    Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-//                    startActivity(intent);
-//                    finish();
-//                    Toast.makeText(SignInActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-//                }
-//                else {
-//                    Toast.makeText(SignInActivity.this, "đăng nhập thất bại", Toast.LENGTH_SHORT).show();
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<User> call, Throwable t) {
-//
-//            }
-//        });
     }
 
     @Override

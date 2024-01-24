@@ -23,7 +23,7 @@ public class User {
 
     String activation_key;
 
-    Date createdDate;
+//    Date createdDate;
 
     String tokenFcm;
 
@@ -40,7 +40,7 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", actived=" + actived +
                 ", activation_key='" + activation_key + '\'' +
-                ", createdDate=" + createdDate +
+//                ", createdDate=" + createdDate +
                 ", tokenFcm='" + tokenFcm + '\'' +
                 ", authorities=" + authorities +
                 '}';
@@ -49,6 +49,13 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public User(String email, String password, String fullname, String phone) {
+        this.email = email;
+        this.password = password;
+        this.fullname = fullname;
+        this.phone = phone;
     }
 
     public int getId() {
@@ -115,13 +122,13 @@ public class User {
         this.activation_key = activation_key;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
+//    public Date getCreatedDate() {
+//        return createdDate;
+//    }
+//
+//    public void setCreatedDate(Date createdDate) {
+//        this.createdDate = createdDate;
+//    }
 
     public String getTokenFcm() {
         return tokenFcm;
