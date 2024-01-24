@@ -1,6 +1,6 @@
 package fithou.duogwas.goldie.Retrofit;
 //
-// Created by duogwas on 23/01/2024.
+// Created by duogwas on 24/01/2024.
 //
 
 
@@ -11,11 +11,10 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
-public interface ApiService {
-
+public interface UserService {
     @POST("login")
-    Call<TokenDto> LoginDto(@Body LoginDto loginDto);
+    Call<TokenDto> SignIn(@Body LoginDto loginDto);
 
     @POST("regis")
-    Call<User> Regis(@Body User user);
+    Call<User> SignUp(@Body User user);
 }
