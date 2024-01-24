@@ -14,9 +14,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import fithou.duogwas.goldie.Model.LoginDto;
+import fithou.duogwas.goldie.Request.LoginDto;
 import fithou.duogwas.goldie.R;
-import fithou.duogwas.goldie.Request.TokenDto;
+import fithou.duogwas.goldie.Response.TokenDto;
 import fithou.duogwas.goldie.Response.ErrorResponse;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.UserService;
@@ -66,6 +66,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             edtPassword.requestFocus();
         }
 
+        if (edtUsername.getText().toString().trim().isEmpty() ||
+                edtPassword.getText().toString().trim().isEmpty()) {
+            Toast.makeText(SignInActivity.this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         LoginDto loginDto = new LoginDto(username, password, "string");
         UserService userService = ApiUtils.getUserAPIService();
         Call<TokenDto> call1 = userService.SignIn(loginDto);
@@ -108,15 +114,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.tvForgotPassword:
-                intent = new Intent(SignInActivity.this, ActiveAccountActivity.class);
+                intent = new Intent(SignInActivity.this, ForgotPasswordActivity.class);
                 startActivity(intent);
-                finish();
                 break;
 
             case R.id.tvSignUp:
                 intent = new Intent(SignInActivity.this, SignUpActivity.class);
                 startActivity(intent);
-                finish();
                 break;
 
             default:

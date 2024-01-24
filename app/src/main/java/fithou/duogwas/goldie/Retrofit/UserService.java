@@ -4,9 +4,9 @@ package fithou.duogwas.goldie.Retrofit;
 //
 
 
-import fithou.duogwas.goldie.Model.LoginDto;
+import fithou.duogwas.goldie.Request.LoginDto;
 import fithou.duogwas.goldie.Model.User;
-import fithou.duogwas.goldie.Request.TokenDto;
+import fithou.duogwas.goldie.Response.TokenDto;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
