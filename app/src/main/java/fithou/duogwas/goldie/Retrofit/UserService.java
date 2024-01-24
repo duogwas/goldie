@@ -10,6 +10,7 @@ import fithou.duogwas.goldie.Request.TokenDto;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface UserService {
     @POST("login")
@@ -17,4 +18,8 @@ public interface UserService {
 
     @POST("regis")
     Call<User> SignUp(@Body User user);
+
+    @POST("active-account")
+    Call<String> ActiveAccount(@Query("email") String email,
+                               @Query("key") String key);
 }

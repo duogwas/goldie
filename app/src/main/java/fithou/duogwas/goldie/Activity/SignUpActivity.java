@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,7 +17,6 @@ import com.google.gson.Gson;
 import fithou.duogwas.goldie.Model.User;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.ErrorResponse;
-import fithou.duogwas.goldie.Retrofit.ApiService;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.UserService;
 import retrofit2.Call;
@@ -87,6 +84,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
+                    User user = response.body();
+                    Intent intent = new Intent(SignUpActivity.this,ActiveAccountActivity.class);
+                    intent.putExtra("emailRegis", email);
+                    intent.putExtra("passwordRegis", password);
+                    startActivity(intent);
+                    finish();
                     Toast.makeText(SignUpActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     // Response không thành công, chuyển đổi thành ErrorResponse
@@ -105,8 +108,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(SignUpActivity.this, "đăng nhập thất bại2", Toast.LENGTH_SHORT).show();
-                Log.e("err", t.getMessage());
+                Toast.makeText(SignUpActivity.this, "Lỗi khi đăng ký", Toast.LENGTH_SHORT).show();
+                Log.e("SignUpErr", t.getMessage());
             }
         });
     }
