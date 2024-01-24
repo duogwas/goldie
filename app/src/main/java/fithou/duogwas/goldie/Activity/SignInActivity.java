@@ -14,16 +14,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
-
 import fithou.duogwas.goldie.Model.LoginDto;
-import fithou.duogwas.goldie.Model.User;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Request.TokenDto;
 import fithou.duogwas.goldie.Response.ErrorResponse;
-import fithou.duogwas.goldie.Retrofit.ApiService;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
-import fithou.duogwas.goldie.Retrofit.RetrofitClient;
 import fithou.duogwas.goldie.Retrofit.UserService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -83,7 +78,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     finish();
                     Toast.makeText(SignInActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Response không thành công, chuyển đổi thành ErrorResponse
                     ErrorResponse errorResponse = null;
                     try {
                         errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
@@ -99,7 +93,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onFailure(Call<TokenDto> call, Throwable t) {
-                Toast.makeText(SignInActivity.this, "Lỗi kết nối API", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignInActivity.this, "Lỗi khi đăng nhập", Toast.LENGTH_SHORT).show();
                 Log.e("SignInErr", t.getMessage());
             }
         });
@@ -113,11 +107,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 Login();
                 break;
 
-//            case R.id.tvForgotPassword:
-//                intent = new Intent(SignInActivity.this, ChooseRole.class);
-//                startActivity(intent);
-//                finish();
-//                break;
+            case R.id.tvForgotPassword:
+                intent = new Intent(SignInActivity.this, ActiveAccountActivity.class);
+                startActivity(intent);
+                finish();
+                break;
 
             case R.id.tvSignUp:
                 intent = new Intent(SignInActivity.this, SignUpActivity.class);
