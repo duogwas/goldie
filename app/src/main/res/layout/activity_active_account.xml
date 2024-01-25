@@ -137,6 +137,19 @@
                 tools:ignore="LabelFor" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tvError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/be_vietnam_bold"
+            android:gravity="left"
+            android:text="Không tìm thấy tài khoản"
+            android:textColor="#D50000"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/btnActive"
             android:layout_width="280dp"
@@ -147,6 +160,14 @@
             android:textAllCaps="true"
             android:textSize="18sp"
             app:cornerRadius="20dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

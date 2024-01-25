@@ -96,6 +96,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
                                     dialog.setCancelable(false);
                                     dialog.show();
                                     progressBar.setVisibility(View.GONE);
+                                    btnConfirm.setVisibility(View.VISIBLE);
                                     btnReturnLogin = dialog.findViewById(R.id.btnReturnLogin);
                                     btnReturnLogin.setOnClickListener(new View.OnClickListener() {
                                         @Override
