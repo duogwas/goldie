@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +27,9 @@ import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     EditText edtFullName, edtPhone, edtEmail, edtPassword;
-    TextView tvSignIn;
+    TextView tvSignIn, tvError;
     Button btnSignUp;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
         tvSignIn = findViewById(R.id.tvSignIn);
+        tvError = findViewById(R.id.tvError);
         btnSignUp = findViewById(R.id.btnSignUp);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void setOnClick() {
@@ -52,6 +57,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void SignUp() {
+        tvError.setVisibility(View.GONE);
         String email = edtEmail.getText().toString();
         String password = edtPassword.getText().toString();
         String fullname = edtFullName.getText().toString();
@@ -91,27 +97,37 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()) {
-                    User user = response.body();
-                    Intent intent = new Intent(SignUpActivity.this, ActiveAccountActivity.class);
-                    intent.putExtra("emailRegis", email);
-                    intent.putExtra("passwordRegis", password);
-                    startActivity(intent);
-                    finish();
-                    Toast.makeText(SignUpActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Response không thành công, chuyển đổi thành ErrorResponse
-                    ErrorResponse errorResponse = null;
-                    try {
-                        errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                progressBar.setVisibility(View.VISIBLE);
+                btnSignUp.setVisibility(View.GONE);
+                tvSignIn.setVisibility(View.GONE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response.isSuccessful()) {
+                            Intent intent = new Intent(SignUpActivity.this, ActiveAccountActivity.class);
+                            intent.putExtra("emailRegis", email);
+                            intent.putExtra("passwordRegis", password);
+                            startActivity(intent);
+                            finish();
+                            Toast.makeText(SignUpActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                        } else {
+                            ErrorResponse errorResponse = null;
+                            try {
+                                errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (errorResponse != null) {
+                                String defaultMessage = errorResponse.getDefaultMessage();
+                                tvError.setVisibility(View.VISIBLE);
+                                tvError.setText(defaultMessage);
+                            }
+                            progressBar.setVisibility(View.GONE);
+                            btnSignUp.setVisibility(View.VISIBLE);
+                            tvSignIn.setVisibility(View.VISIBLE);
+                        }
                     }
-                    if (errorResponse != null) {
-                        String defaultMessage = errorResponse.getDefaultMessage();
-                        Toast.makeText(SignUpActivity.this, defaultMessage, Toast.LENGTH_SHORT).show();
-                    }
-                }
+                }, 300);
             }
 
             @Override

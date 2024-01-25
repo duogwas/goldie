@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -29,6 +32,8 @@ public class ActiveAccountActivity extends AppCompatActivity implements View.OnC
     EditText edtInputCode1, edtInputCode2, edtInputCode3, edtInputCode4, edtInputCode5, edtInputCode6;
     Button btnActive;
     String emailRegis, passwordRegis;
+    TextView tvError;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,8 @@ public class ActiveAccountActivity extends AppCompatActivity implements View.OnC
         edtInputCode4 = findViewById(R.id.edtInputCode4);
         edtInputCode5 = findViewById(R.id.edtInputCode5);
         edtInputCode6 = findViewById(R.id.edtInputCode6);
+        tvError = findViewById(R.id.tvError);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void getDataVerify() {
@@ -155,6 +162,7 @@ public class ActiveAccountActivity extends AppCompatActivity implements View.OnC
     }
 
     private void verifyUser() {
+        tvError.setVisibility(View.GONE);
         if (edtInputCode1.getText().toString().trim().isEmpty() ||
                 edtInputCode2.getText().toString().trim().isEmpty() ||
                 edtInputCode3.getText().toString().trim().isEmpty() ||
@@ -177,20 +185,30 @@ public class ActiveAccountActivity extends AppCompatActivity implements View.OnC
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful()) {
-                    signInAfterVerify();
-                } else {
-                    ErrorResponse errorResponse = null;
-                    try {
-                        errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                progressBar.setVisibility(View.VISIBLE);
+                btnActive.setVisibility(View.GONE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response.isSuccessful()) {
+                            signInAfterVerify();
+                        } else {
+                            ErrorResponse errorResponse = null;
+                            try {
+                                errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (errorResponse != null) {
+                                String defaultMessage = errorResponse.getDefaultMessage();
+                                tvError.setVisibility(View.VISIBLE);
+                                tvError.setText(defaultMessage);
+                            }
+                            progressBar.setVisibility(View.GONE);
+                            btnActive.setVisibility(View.VISIBLE);
+                        }
                     }
-                    if (errorResponse != null) {
-                        String defaultMessage = errorResponse.getDefaultMessage();
-                        Toast.makeText(ActiveAccountActivity.this, defaultMessage, Toast.LENGTH_SHORT).show();
-                    }
-                }
+                }, 300);
             }
 
             @Override
@@ -222,7 +240,8 @@ public class ActiveAccountActivity extends AppCompatActivity implements View.OnC
                     }
                     if (errorResponse != null) {
                         String defaultMessage = errorResponse.getDefaultMessage();
-                        Toast.makeText(ActiveAccountActivity.this, defaultMessage, Toast.LENGTH_SHORT).show();
+                        tvError.setVisibility(View.VISIBLE);
+                        tvError.setText(defaultMessage);
                     }
                 }
             }

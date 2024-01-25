@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +28,9 @@ import retrofit2.Response;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
     EditText edtUsername, edtPassword;
-    TextView tvForgotPassword, tvSignUp;
+    TextView tvForgotPassword, tvSignUp, tvError;
     Button btnSignIn;
+    ProgressBar progressBar;
     String emailForgotPassword;
 
     @Override
@@ -45,7 +48,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         edtPassword = findViewById(R.id.edtPassword);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvSignUp = findViewById(R.id.tvSignUp);
+        tvError = findViewById(R.id.tvError);
         btnSignIn = findViewById(R.id.btnSignIn);
+        progressBar=findViewById(R.id.progressBar);
     }
 
     private void setOnClick() {
@@ -63,6 +68,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void Login() {
+        tvError.setVisibility(View.GONE);
         String username = edtUsername.getText().toString();
         String password = edtPassword.getText().toString();
 
@@ -88,23 +94,36 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         call.enqueue(new Callback<TokenDto>() {
             @Override
             public void onResponse(Call<TokenDto> call, Response<TokenDto> response) {
-                if (response.isSuccessful()) {
-                    Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                    Toast.makeText(SignInActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-                } else {
-                    ErrorResponse errorResponse = null;
-                    try {
-                        errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                progressBar.setVisibility(View.VISIBLE);
+                btnSignIn.setVisibility(View.GONE);
+                tvSignUp.setVisibility(View.GONE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response.isSuccessful()) {
+                            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                            Toast.makeText(SignInActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                        } else {
+                            ErrorResponse errorResponse = null;
+                            try {
+                                errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (errorResponse != null) {
+                                String defaultMessage = errorResponse.getDefaultMessage();
+                                tvError.setVisibility(View.VISIBLE);
+                                tvError.setText(defaultMessage);
+                            }
+                            progressBar.setVisibility(View.GONE);
+                            btnSignIn.setVisibility(View.VISIBLE);
+                            tvSignUp.setVisibility(View.VISIBLE);
+                        }
                     }
-                    if (errorResponse != null) {
-                        String defaultMessage = errorResponse.getDefaultMessage();
-                        Toast.makeText(SignInActivity.this, defaultMessage, Toast.LENGTH_SHORT).show();
-                    }
-                }
+                },300);
+
             }
 
             @Override
