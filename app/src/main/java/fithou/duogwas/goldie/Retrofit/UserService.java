@@ -22,4 +22,7 @@ public interface UserService {
     @POST("active-account")
     Call<String> ActiveAccount(@Query("email") String email,
                                @Query("key") String key);
+
+    @POST("forgot-password")
+    Call<String> ForgotPassword(@Query("email") String email);
 }
