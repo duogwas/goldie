@@ -77,6 +77,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             edtPassword.requestFocus();
         }
 
+        if (edtEmail.getText().toString().trim().isEmpty() ||
+                edtPassword.getText().toString().trim().isEmpty() ||
+                edtFullName.getText().toString().trim().isEmpty() ||
+                edtPhone.getText().toString().trim().isEmpty()) {
+            Toast.makeText(SignUpActivity.this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         User userRegis = new User(email, password, fullname, phone);
         UserService userService = ApiUtils.getUserAPIService();
         Call<User> call = userService.SignUp(userRegis);
@@ -85,7 +93,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
                     User user = response.body();
-                    Intent intent = new Intent(SignUpActivity.this,ActiveAccountActivity.class);
+                    Intent intent = new Intent(SignUpActivity.this, ActiveAccountActivity.class);
                     intent.putExtra("emailRegis", email);
                     intent.putExtra("passwordRegis", password);
                     startActivity(intent);
@@ -125,7 +133,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.tvSignIn:
                 intent = new Intent(SignUpActivity.this, SignInActivity.class);
                 startActivity(intent);
-                finish();
                 break;
 
             default:

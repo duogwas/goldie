@@ -1,4 +1,4 @@
-package fithou.duogwas.goldie.Request;
+package fithou.duogwas.goldie.Response;
 //
 // Created by duogwas on 23/01/2024.
 //

@@ -11,14 +11,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import fithou.duogwas.goldie.Model.LoginDto;
+import fithou.duogwas.goldie.Request.LoginDto;
 import fithou.duogwas.goldie.R;
-import fithou.duogwas.goldie.Request.TokenDto;
+import fithou.duogwas.goldie.Response.TokenDto;
 import fithou.duogwas.goldie.Response.ErrorResponse;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.UserService;
