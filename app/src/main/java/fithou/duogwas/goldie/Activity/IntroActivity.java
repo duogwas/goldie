@@ -11,6 +11,7 @@ import android.widget.TextView;
 import fithou.duogwas.goldie.Model.User;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Utils.ObjectSharedPreferences;
+import vn.thanguit.toastperfect.ToastPerfect;
 
 public class IntroActivity extends AppCompatActivity {
     TextView tvStart;
@@ -36,6 +37,7 @@ public class IntroActivity extends AppCompatActivity {
                 if (isLoged!=null){
                     startActivity(new Intent(IntroActivity.this, MainActivity.class));
                     finish();
+                    ToastPerfect.makeText(IntroActivity.this, ToastPerfect.INFORMATION, "Chúc bạn mua sắm vui vẻ", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();;
                 }
                 else{
                     startActivity(new Intent(IntroActivity.this, SignInActivity.class));

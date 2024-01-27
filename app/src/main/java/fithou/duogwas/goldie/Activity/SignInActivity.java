@@ -27,6 +27,7 @@ import fithou.duogwas.goldie.Utils.ObjectSharedPreferences;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.thanguit.toastperfect.ToastPerfect;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
     EditText edtUsername, edtPassword;
@@ -108,7 +109,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                             Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
-                            Toast.makeText(SignInActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                            ToastPerfect.makeText(SignInActivity.this, ToastPerfect.SUCCESS, "Đăng nhập thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();;
                         } else {
                             ErrorResponse errorResponse = null;
                             try {
