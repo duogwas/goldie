@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import fithou.duogwas.goldie.Model.User;
 import fithou.duogwas.goldie.R;
+import fithou.duogwas.goldie.Utils.ObjectSharedPreferences;
 
 public class IntroActivity extends AppCompatActivity {
     TextView tvStart;
@@ -30,7 +32,14 @@ public class IntroActivity extends AppCompatActivity {
         tvStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(IntroActivity.this, SignInActivity.class));
+                User isLoged = ObjectSharedPreferences.getSavedObjectFromPreference(IntroActivity.this, "User", "MODE_PRIVATE", User.class);
+                if (isLoged!=null){
+                    startActivity(new Intent(IntroActivity.this, MainActivity.class));
+                    finish();
+                }
+                else{
+                    startActivity(new Intent(IntroActivity.this, SignInActivity.class));
+                }
             }
         });
     }

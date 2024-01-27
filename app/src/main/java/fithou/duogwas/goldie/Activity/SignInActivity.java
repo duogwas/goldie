@@ -16,12 +16,14 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import fithou.duogwas.goldie.Model.User;
 import fithou.duogwas.goldie.Request.LoginDto;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.TokenDto;
 import fithou.duogwas.goldie.Response.ErrorResponse;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.UserService;
+import fithou.duogwas.goldie.Utils.ObjectSharedPreferences;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -101,6 +103,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void run() {
                         if (response.isSuccessful()) {
+                            TokenDto userSignIn = response.body();
+                            ObjectSharedPreferences.saveObjectToSharedPreference(SignInActivity.this, "User", "MODE_PRIVATE", userSignIn);
                             Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();

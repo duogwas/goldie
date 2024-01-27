@@ -10,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bdtopcoder.smart_slider.SliderAdapter;
@@ -19,10 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fithou.duogwas.goldie.R;
+import fithou.duogwas.goldie.Response.TokenDto;
+import fithou.duogwas.goldie.Utils.ObjectSharedPreferences;
 import vn.thanguit.toastperfect.ToastPerfect;
 
 public class HomeFragment extends Fragment {
     ViewPager2 viewPager2;
+    TokenDto user;
+    TextView tvHiName;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -40,11 +45,12 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         AnhXa();
         Slide();
-
+        LoadUserInfor();
     }
 
     private void AnhXa() {
         viewPager2 = getView().findViewById(R.id.smartSlider);
+        tvHiName=getView().findViewById(R.id.tvHiName);
     }
     private void Slide() {
         List<SliderItem> sliderItems = new ArrayList<>();
@@ -58,5 +64,9 @@ public class HomeFragment extends Fragment {
                 ToastPerfect.makeText(getContext(), ToastPerfect.SUCCESS, "Today is a beautiful day!", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
             }
         });
+    }
+    private void LoadUserInfor() {
+        user = ObjectSharedPreferences.getSavedObjectFromPreference(getContext(), "User", "MODE_PRIVATE", TokenDto.class);
+        tvHiName.setText("Xin chào,\n"+ user.getUser().getFullname());
     }
 }
