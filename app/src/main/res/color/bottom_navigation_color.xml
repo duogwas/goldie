@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Màu khi được chọn -->
+    <item android:color="#6e79a2" android:state_checked="true" />
+
+    <!-- Màu khi không được chọn -->
+    <item android:color="#000" android:state_checked="false" />
+
+    <!-- Màu mặc định -->
+    <item android:color="#000" />
+
+</selector>
