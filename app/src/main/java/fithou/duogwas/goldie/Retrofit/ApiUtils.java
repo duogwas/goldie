@@ -12,4 +12,8 @@ public class ApiUtils {
     public static UserService getUserAPIService() {
         return RetrofitClient.getClient(BASE_URL).create(UserService.class);
     }
+
+    public static CategoryService getCategoryAPIService() {
+        return RetrofitClient.getClient(BASE_URL).create(CategoryService.class);
+    }
 }

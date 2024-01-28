@@ -6,15 +6,15 @@
         android:icon="@drawable/ic_home"
         android:title="Trang chủ" />
     <item
-        android:id="@+id/menu_cart"
-        android:icon="@drawable/ic_cart"
-        android:title="Giỏ hàng" />
+        android:id="@+id/menu_category"
+        android:icon="@drawable/ic_category"
+        android:title="Danh mục" />
     <item
-        android:id="@+id/menu_my_order"
-        android:icon="@drawable/ic_my_order"
-        android:title="Đơn mua" />
+        android:id="@+id/menu_news"
+        android:icon="@drawable/ic_news"
+        android:title="Tin tức" />
     <item
         android:id="@+id/menu_profile"
         android:icon="@drawable/ic_profile"
-        android:title="Tôi" />
+        android:title="Cá nhân" />
 </menu>
