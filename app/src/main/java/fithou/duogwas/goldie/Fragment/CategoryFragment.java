@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -18,6 +19,8 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.List;
 
 import fithou.duogwas.goldie.Adapter.CategoryAdapter;
+import fithou.duogwas.goldie.Adapter.PrimaryCategoryAdapter;
+import fithou.duogwas.goldie.Adapter.SubCategoryAdapter;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.CategoryResponse;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
@@ -27,19 +30,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CategoryFragment extends Fragment {
-    ViewPager2 viewPager2;
-    private RecyclerView.Adapter adapterCategories;
-    RecyclerView rcvCategories;
+    private RecyclerView.Adapter adapterPrimaryCategories;
+    RecyclerView rcvPrimaryCategories;
 
     public CategoryFragment() {
-        // Required empty public constructor
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_category, container, false);
     }
 
@@ -48,22 +48,22 @@ public class CategoryFragment extends Fragment {
         AnhXa();
         LoadPrimaryCategories();
     }
+
     private void AnhXa() {
-        viewPager2 = getView().findViewById(R.id.smartSlider);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        rcvPrimaryCategories = getView().findViewById(R.id.rcvPrimaryCategories);
+        rcvPrimaryCategories.setLayoutManager(linearLayoutManager);
     }
 
     private void LoadPrimaryCategories() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        rcvCategories = getView().findViewById(R.id.rcvCategories);
-        rcvCategories.setLayoutManager(linearLayoutManager);
         CategoryService categoryService = ApiUtils.getCategoryAPIService();
         Call<List<CategoryResponse>> call = categoryService.findPrimaryCategory();
         call.enqueue(new Callback<List<CategoryResponse>>() {
             @Override
             public void onResponse(Call<List<CategoryResponse>> call, Response<List<CategoryResponse>> response) {
                 List<CategoryResponse> categoryResponse = response.body();
-                adapterCategories = new CategoryAdapter(categoryResponse, getContext());
-                rcvCategories.setAdapter(adapterCategories);
+                adapterPrimaryCategories = new PrimaryCategoryAdapter(categoryResponse, getContext());
+                rcvPrimaryCategories.setAdapter(adapterPrimaryCategories);
             }
 
             @Override

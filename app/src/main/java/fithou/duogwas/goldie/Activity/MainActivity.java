@@ -8,6 +8,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import fithou.duogwas.goldie.Fragment.CategoryFragment;
 import fithou.duogwas.goldie.Fragment.HomeFragment;
 import fithou.duogwas.goldie.Fragment.BlogFragment;
@@ -17,6 +19,7 @@ import fithou.duogwas.goldie.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
+    BottomNavigationView bottomNavigationView;
 
 
     @Override
