@@ -14,46 +14,66 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/edtSearch"
+            <android.widget.SearchView
+                android:id="@+id/searchViewCategory"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/custom_edt_search"
-                android:drawableStart="@drawable/ic_btn_search"
-                android:drawablePadding="15dp"
-                android:ems="10"
-                android:hint="Tìm kiếm..."
-                android:inputType="textPersonName"
-                android:paddingStart="20dp"
-                android:paddingEnd="10dp"
+                android:iconifiedByDefault="false"
+                android:queryHint="Tìm kiếm..."
+                android:searchIcon="@drawable/ic_btn_search"
+                android:theme="@style/ThemeOverlay.search"
                 app:layout_constraintBottom_toTopOf="@+id/rcvPrimaryCategories"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <!--            <SearchView-->
+            <!--                android:id="@+id/edtSearch"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="50dp"-->
+            <!--                android:layout_marginStart="32dp"-->
+            <!--                android:layout_marginTop="16dp"-->
+            <!--                android:layout_marginEnd="32dp"-->
+            <!--                android:layout_marginBottom="16dp"-->
+            <!--                android:background="@drawable/custom_edt_search"-->
+            <!--                android:drawableStart="@drawable/ic_btn_search"-->
+            <!--                android:drawablePadding="15dp"-->
+            <!--                android:ems="10"-->
+            <!--                android:hint="Tìm kiếm"-->
+            <!--                android:inputType="textPersonName"-->
+            <!--                android:paddingStart="20dp"-->
+            <!--                android:paddingEnd="10dp"-->
+            <!--                style="@style/ThemeOverlay.search"-->
+            <!--                app:layout_constraintBottom_toTopOf="@+id/rcvPrimaryCategories"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent"-->
+            <!--                app:queryHint="Tìm kiếm..." />-->
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcvPrimaryCategories"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="16dp"
                 android:clipToPadding="false"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edtSearch" />
+                app:layout_constraintTop_toBottomOf="@+id/searchViewCategory" />
 
-<!--            <ImageView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="450dp"-->
-<!--                android:src="@drawable/bg_404"-->
-<!--                android:layout_marginTop="100dp"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/edtSearch"/>-->
+            <!--            <ImageView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="450dp"-->
+            <!--                android:src="@drawable/bg_404"-->
+            <!--                android:layout_marginTop="100dp"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/edtSearch"/>-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

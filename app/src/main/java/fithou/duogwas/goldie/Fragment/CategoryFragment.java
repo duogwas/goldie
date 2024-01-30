@@ -5,24 +5,23 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.android.material.tabs.TabLayout;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import fithou.duogwas.goldie.Adapter.CategoryAdapter;
 import fithou.duogwas.goldie.Adapter.PrimaryCategoryAdapter;
-import fithou.duogwas.goldie.Adapter.SubCategoryAdapter;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.CategoryResponse;
+import fithou.duogwas.goldie.Response.Page;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.CategoryService;
 import retrofit2.Call;
@@ -30,8 +29,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CategoryFragment extends Fragment {
-    private RecyclerView.Adapter adapterPrimaryCategories;
+    private RecyclerView.Adapter adapterPrimaryCategories, adapterSubCategories;
     RecyclerView rcvPrimaryCategories;
+    android.widget.SearchView searchView;
 
     public CategoryFragment() {
     }
@@ -46,6 +46,7 @@ public class CategoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         AnhXa();
+        setSearchView();
         LoadPrimaryCategories();
     }
 
@@ -53,6 +54,7 @@ public class CategoryFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rcvPrimaryCategories = getView().findViewById(R.id.rcvPrimaryCategories);
         rcvPrimaryCategories.setLayoutManager(linearLayoutManager);
+        searchView = getView().findViewById(R.id.searchViewCategory);
     }
 
     private void LoadPrimaryCategories() {
@@ -72,4 +74,56 @@ public class CategoryFragment extends Fragment {
             }
         });
     }
+
+    private void SearchCategory(String categoryName) {
+        CategoryService categoryService = ApiUtils.getCategoryAPIService();
+        Call<Page<CategoryResponse>> call = categoryService.search(categoryName, 0, 10);
+        call.enqueue(new Callback<Page<CategoryResponse>>() {
+            @Override
+            public void onResponse(Call<Page<CategoryResponse>> call, Response<Page<CategoryResponse>> response) {
+                if (response.isSuccessful()) {
+                    Page<CategoryResponse> page = response.body();
+                    List<CategoryResponse> categories = page.getContent();
+                    adapterPrimaryCategories = new PrimaryCategoryAdapter(categories, getContext());
+                    rcvPrimaryCategories.setAdapter(adapterPrimaryCategories);
+                } else {
+                    Log.e("category", String.valueOf(response.code()));
+                    Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin1", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Page<CategoryResponse>> call, Throwable t) {
+                Log.e("category2", t.getMessage());
+                Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin2", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void setSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                if (s.length() == 0) {
+                    LoadPrimaryCategories();
+                } else {
+                    SearchCategory(s);
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.length() == 0) {
+                    LoadPrimaryCategories();
+                } else {
+                    SearchCategory(s);
+                }
+                return false;
+            }
+        });
+    }
+
 }
