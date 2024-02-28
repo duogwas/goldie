@@ -25,8 +25,8 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
     List<Category> categories;
     Context context;
 
-    public SubCategoryAdapter(List<Category> categoryDomains, Context context) {
-        this.categories = categoryDomains;
+    public SubCategoryAdapter(List<Category> subCategories, Context context) {
+        this.categories = subCategories;
         this.context = context;
     }
 
@@ -39,24 +39,23 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Category categoryResponse = categories.get(position);
-        if (categoryResponse == null) {
+        Category subCategories = categories.get(position);
+        if (subCategories == null) {
             return;
         }
 
-        holder.categoryName.setText(categoryResponse.getName());
+        holder.categoryName.setText(subCategories.getName());
         Glide.with(context)
-                .load(categoryResponse.getImageBanner())
+                .load(subCategories.getImageBanner())
                 .into(holder.categoryPic);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Bạn đã chọn: " + categoryResponse.getName(), ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
+                ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Bạn đã chọn: " + subCategories.getName(), ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
             }
         });
     }
-
 
     @Override
     public int getItemCount() {
@@ -66,13 +65,11 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView categoryName;
         CircleImageView categoryPic;
-        ConstraintLayout mainLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             categoryName = itemView.findViewById(R.id.subCategoryName);
             categoryPic = itemView.findViewById(R.id.subCategoryPic);
-            mainLayout = itemView.findViewById(R.id.mainLayout);
         }
     }
 }

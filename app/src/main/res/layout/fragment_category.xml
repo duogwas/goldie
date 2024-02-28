@@ -1,82 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragment.CategoryFragment">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <android.widget.SearchView
+            android:id="@+id/searchViewCategory"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/custom_edt_search"
+            android:iconifiedByDefault="false"
+            android:queryHint="Tìm kiếm..."
+            android:searchIcon="@drawable/ic_btn_search"
+            android:theme="@style/ThemeOverlay.search" />
 
-            <android.widget.SearchView
-                android:id="@+id/searchViewCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/custom_edt_search"
-                android:iconifiedByDefault="false"
-                android:queryHint="Tìm kiếm..."
-                android:searchIcon="@drawable/ic_btn_search"
-                android:theme="@style/ThemeOverlay.search"
-                app:layout_constraintBottom_toTopOf="@+id/rcvPrimaryCategories"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcvCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:clipToPadding="false"
+            android:visibility="visible" />
 
-            <!--            <SearchView-->
-            <!--                android:id="@+id/edtSearch"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="50dp"-->
-            <!--                android:layout_marginStart="32dp"-->
-            <!--                android:layout_marginTop="16dp"-->
-            <!--                android:layout_marginEnd="32dp"-->
-            <!--                android:layout_marginBottom="16dp"-->
-            <!--                android:background="@drawable/custom_edt_search"-->
-            <!--                android:drawableStart="@drawable/ic_btn_search"-->
-            <!--                android:drawablePadding="15dp"-->
-            <!--                android:ems="10"-->
-            <!--                android:hint="Tìm kiếm"-->
-            <!--                android:inputType="textPersonName"-->
-            <!--                android:paddingStart="20dp"-->
-            <!--                android:paddingEnd="10dp"-->
-            <!--                style="@style/ThemeOverlay.search"-->
-            <!--                app:layout_constraintBottom_toTopOf="@+id/rcvPrimaryCategories"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toTopOf="parent"-->
-            <!--                app:queryHint="Tìm kiếm..." />-->
+    </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcvPrimaryCategories"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                android:clipToPadding="false"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/searchViewCategory" />
-
-            <!--            <ImageView-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="450dp"-->
-            <!--                android:src="@drawable/bg_404"-->
-            <!--                android:layout_marginTop="100dp"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toBottomOf="@+id/edtSearch"/>-->
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
-
-</FrameLayout>
+</androidx.core.widget.NestedScrollView>

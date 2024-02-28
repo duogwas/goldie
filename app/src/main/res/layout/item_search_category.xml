@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,14 +40,6 @@
                 android:layout_marginTop="50dp"
                 android:textColor="#000"
                 android:textSize="20sp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcvSubCategories"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/categoryPic"
-                android:layout_marginTop="10dp"
-                android:visibility="gone" />
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

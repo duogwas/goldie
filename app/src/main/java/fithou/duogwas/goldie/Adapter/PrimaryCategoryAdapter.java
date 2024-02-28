@@ -30,8 +30,8 @@ public class PrimaryCategoryAdapter extends RecyclerView.Adapter<PrimaryCategory
     private RecyclerView.Adapter adapterSubCategories;
     Context context;
 
-    public PrimaryCategoryAdapter(List<CategoryResponse> categoryDomains, Context context) {
-        this.categories = categoryDomains;
+    public PrimaryCategoryAdapter(List<CategoryResponse> categoryResponses, Context context) {
+        this.categories = categoryResponses;
         this.context = context;
     }
 
@@ -44,14 +44,14 @@ public class PrimaryCategoryAdapter extends RecyclerView.Adapter<PrimaryCategory
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        CategoryResponse categoryResponse = categories.get(position);
-        if (categoryResponse == null) {
+        CategoryResponse primaryCategories = categories.get(position);
+        if (primaryCategories == null) {
             return;
         }
 
-        holder.categoryName.setText(categoryResponse.getName());
+        holder.categoryName.setText(primaryCategories.getName());
         Glide.with(context)
-                .load(categoryResponse.getImageBanner())
+                .load(primaryCategories.getImageBanner())
                 .into(holder.categoryPic);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -60,15 +60,15 @@ public class PrimaryCategoryAdapter extends RecyclerView.Adapter<PrimaryCategory
                 if (holder.rcvSubCategories.getVisibility() == View.VISIBLE) {
                     holder.rcvSubCategories.setVisibility(View.GONE);
                 } else {
-                    List<Category> categoriesSubList = categoryResponse.getCategories();
+                    List<Category> categoriesSubList = primaryCategories.getCategories();
                     holder.rcvSubCategories.setVisibility(View.VISIBLE);
-                    LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-                    holder.rcvSubCategories.setLayoutManager(linearLayoutManager1);
-                    DividerItemDecoration dividerItemDecoration1 = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
-                    holder.rcvSubCategories.addItemDecoration(dividerItemDecoration1);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+                    holder.rcvSubCategories.setLayoutManager(linearLayoutManager);
+                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
+                    holder.rcvSubCategories.addItemDecoration(dividerItemDecoration);
                     adapterSubCategories = new SubCategoryAdapter(categoriesSubList, context);
                     holder.rcvSubCategories.setAdapter(adapterSubCategories);
-                    ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Bạn đã chọn: " + categoryResponse.getName(), ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
+                    ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Bạn đã chọn: " + primaryCategories.getName(), ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
                 }
             }
         });
@@ -83,14 +83,12 @@ public class PrimaryCategoryAdapter extends RecyclerView.Adapter<PrimaryCategory
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView categoryName;
         ImageView categoryPic;
-        ConstraintLayout mainLayout;
         RecyclerView rcvSubCategories;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             categoryName = itemView.findViewById(R.id.categoryName);
             categoryPic = itemView.findViewById(R.id.categoryPic);
-            mainLayout = itemView.findViewById(R.id.mainLayout);
             rcvSubCategories = itemView.findViewById(R.id.rcvSubCategories);
         }
     }

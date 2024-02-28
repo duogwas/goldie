@@ -19,6 +19,7 @@ import java.util.List;
 
 import fithou.duogwas.goldie.Adapter.CategoryAdapter;
 import fithou.duogwas.goldie.Adapter.PrimaryCategoryAdapter;
+import fithou.duogwas.goldie.Adapter.SearchCategoryAdapter;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.CategoryResponse;
 import fithou.duogwas.goldie.Response.Page;
@@ -29,13 +30,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CategoryFragment extends Fragment {
-    private RecyclerView.Adapter adapterPrimaryCategories, adapterSubCategories;
-    RecyclerView rcvPrimaryCategories;
+    private RecyclerView.Adapter adapterPrimaryCategories, adapterSearchCategories;
+    RecyclerView rcvCategories;
     android.widget.SearchView searchView;
 
     public CategoryFragment() {
+        // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,8 +53,8 @@ public class CategoryFragment extends Fragment {
 
     private void AnhXa() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        rcvPrimaryCategories = getView().findViewById(R.id.rcvPrimaryCategories);
-        rcvPrimaryCategories.setLayoutManager(linearLayoutManager);
+        rcvCategories = getView().findViewById(R.id.rcvCategories);
+        rcvCategories.setLayoutManager(linearLayoutManager);
         searchView = getView().findViewById(R.id.searchViewCategory);
     }
 
@@ -65,7 +66,7 @@ public class CategoryFragment extends Fragment {
             public void onResponse(Call<List<CategoryResponse>> call, Response<List<CategoryResponse>> response) {
                 List<CategoryResponse> categoryResponse = response.body();
                 adapterPrimaryCategories = new PrimaryCategoryAdapter(categoryResponse, getContext());
-                rcvPrimaryCategories.setAdapter(adapterPrimaryCategories);
+                rcvCategories.setAdapter(adapterPrimaryCategories);
             }
 
             @Override
@@ -84,8 +85,8 @@ public class CategoryFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Page<CategoryResponse> page = response.body();
                     List<CategoryResponse> categories = page.getContent();
-                    adapterPrimaryCategories = new PrimaryCategoryAdapter(categories, getContext());
-                    rcvPrimaryCategories.setAdapter(adapterPrimaryCategories);
+                    adapterSearchCategories = new SearchCategoryAdapter(categories, getContext());
+                    rcvCategories.setAdapter(adapterSearchCategories);
                 } else {
                     Log.e("category", String.valueOf(response.code()));
                     Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin1", Toast.LENGTH_SHORT).show();
