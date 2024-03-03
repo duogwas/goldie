@@ -10,9 +10,9 @@ import android.view.WindowManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import fithou.duogwas.goldie.Fragment.CartFragment;
+import fithou.duogwas.goldie.Fragment.CategoryFragment;
 import fithou.duogwas.goldie.Fragment.HomeFragment;
-import fithou.duogwas.goldie.Fragment.MyOrderFragment;
+import fithou.duogwas.goldie.Fragment.BlogFragment;
 import fithou.duogwas.goldie.Fragment.ProfileFragment;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.databinding.ActivityMainBinding;
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding =ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(binding.getRoot());
         replaceFragment(new HomeFragment());
@@ -35,11 +35,11 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.menu_home:
                     replaceFragment(new HomeFragment());
                     break;
-                case R.id.menu_cart:
-                    replaceFragment(new CartFragment());
+                case R.id.menu_category:
+                    replaceFragment(new CategoryFragment());
                     break;
-                case R.id.menu_my_order:
-                    replaceFragment(new MyOrderFragment());
+                case R.id.menu_news:
+                    replaceFragment(new BlogFragment());
                     break;
                 case R.id.menu_profile:
                     replaceFragment(new ProfileFragment());
@@ -49,10 +49,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void replaceFragment(Fragment fragment){
+    private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.viewPager2,fragment);
+        fragmentTransaction.replace(R.id.FrameLayout, fragment);
         fragmentTransaction.commit();
     }
 }

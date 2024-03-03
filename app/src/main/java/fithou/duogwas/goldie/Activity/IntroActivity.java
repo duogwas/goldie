@@ -37,7 +37,6 @@ public class IntroActivity extends AppCompatActivity {
                 if (isLoged!=null){
                     startActivity(new Intent(IntroActivity.this, MainActivity.class));
                     finish();
-                    ToastPerfect.makeText(IntroActivity.this, ToastPerfect.INFORMATION, "Chúc bạn mua sắm vui vẻ", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();;
                 }
                 else{
                     startActivity(new Intent(IntroActivity.this, SignInActivity.class));

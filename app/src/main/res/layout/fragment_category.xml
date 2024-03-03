@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.CategoryFragment">
+
+    <android.widget.SearchView
+        android:id="@+id/searchViewCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/custom_edt_search"
+        android:iconifiedByDefault="false"
+        android:queryBackground="@null"
+        android:queryHint="Tìm kiếm..."
+        android:searchIcon="@drawable/ic_btn_search"
+        android:theme="@style/ThemeOverlay.search" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcvCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchViewCategory"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:visibility="visible" />
+
+</RelativeLayout>
