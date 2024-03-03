@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import fithou.duogwas.goldie.Model.User;
 import fithou.duogwas.goldie.Request.LoginDto;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.TokenDto;

@@ -59,6 +59,7 @@ public class HomeFragment extends Fragment {
         Slide();
         LoadUserInfor();
         LoadCategoriesList();
+        LoadProductList();
     }
 
     private void AnhXa() {
@@ -97,5 +98,9 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
+
+    private void LoadProductList(){
+
     }
 }

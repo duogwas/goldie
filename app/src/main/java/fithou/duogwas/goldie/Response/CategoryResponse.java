@@ -7,7 +7,7 @@ package fithou.duogwas.goldie.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-import fithou.duogwas.goldie.Model.Category;
+import fithou.duogwas.goldie.Entity.Category;
 
 public class CategoryResponse {
 

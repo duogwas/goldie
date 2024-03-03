@@ -1,10 +1,8 @@
-package fithou.duogwas.goldie.Model;
+package fithou.duogwas.goldie.Entity;
 //
 // Created by duogwas on 23/01/2024.
 //
 
-
-import java.sql.Date;
 
 public class User {
     int id;

@@ -1,4 +1,4 @@
-package fithou.duogwas.goldie.Model;
+package fithou.duogwas.goldie.Entity;
 //
 // Created by duogwas on 27/01/2024.
 //

@@ -78,7 +78,7 @@ public class CategoryFragment extends Fragment {
 
     private void SearchCategory(String categoryName) {
         CategoryService categoryService = ApiUtils.getCategoryAPIService();
-        Call<Page<CategoryResponse>> call = categoryService.search(categoryName, 0, 10);
+        Call<Page<CategoryResponse>> call = categoryService.searchCategory(categoryName, 0, 10);
         call.enqueue(new Callback<Page<CategoryResponse>>() {
             @Override
             public void onResponse(Call<Page<CategoryResponse>> call, Response<Page<CategoryResponse>> response) {

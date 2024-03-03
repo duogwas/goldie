@@ -20,8 +20,8 @@ public interface CategoryService {
     Call<List<CategoryResponse>> findPrimaryCategory();
 
     @GET("category/public/search")
-    Call<Page<CategoryResponse>> search(@Query("q") String search,
-                                        @Query("page") int page,
-                                        @Query("size") int size);
+    Call<Page<CategoryResponse>> searchCategory(@Query("q") String search,
+                                                @Query("page") int page,
+                                                @Query("size") int size);
 
 }
