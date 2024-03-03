@@ -14,7 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface ProductService {
-    @GET("category/public/search")
-    Call<Page<ProductResponse>> search(@Query("page") int page,
-                                       @Query("size") int size);
+    @GET("product/public/findAll")
+    Call<Page<ProductResponse>> getProductPage(@Query("page") int page,
+                                               @Query("size") int size);
 }

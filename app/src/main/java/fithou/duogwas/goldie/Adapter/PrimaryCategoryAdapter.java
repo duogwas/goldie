@@ -51,19 +51,19 @@ public class PrimaryCategoryAdapter extends RecyclerView.Adapter<PrimaryCategory
 //        ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Bạn đã chọn: " + primaryCategories.getName(), ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
     }
 
-@Override
-public int getItemCount(){
+    @Override
+    public int getItemCount() {
         return categories.size();
-        }
-
-public class ViewHolder extends RecyclerView.ViewHolder {
-    TextView categoryName;
-    RecyclerView rcvSubCategories;
-
-    public ViewHolder(@NonNull View itemView) {
-        super(itemView);
-        categoryName = itemView.findViewById(R.id.tvPrimaryCategoryName);
-        rcvSubCategories = itemView.findViewById(R.id.rcvSubCategories);
     }
-}
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView categoryName;
+        RecyclerView rcvSubCategories;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            categoryName = itemView.findViewById(R.id.tvPrimaryCategoryName);
+            rcvSubCategories = itemView.findViewById(R.id.rcvSubCategories);
+        }
+    }
 }
