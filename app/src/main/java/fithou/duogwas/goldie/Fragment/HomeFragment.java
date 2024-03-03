@@ -69,14 +69,7 @@ public class HomeFragment extends Fragment {
         List<SliderItem> sliderItems = new ArrayList<>();
         sliderItems.add(new SliderItem(R.drawable.banner_1,"image 1"));
         sliderItems.add(new SliderItem(R.drawable.banner_2,"image 2"));
-
         viewPager2.setAdapter(new SliderAdapter(sliderItems,viewPager2,3500));
-
-        new SliderAdapter((position, title, view1) -> {
-            if(title=="image 1"){
-                ToastPerfect.makeText(getContext(), ToastPerfect.SUCCESS, "Today is a beautiful day!", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
-            }
-        });
     }
     private void LoadUserInfor() {
         user = ObjectSharedPreferences.getSavedObjectFromPreference(getContext(), "User", "MODE_PRIVATE", TokenDto.class);

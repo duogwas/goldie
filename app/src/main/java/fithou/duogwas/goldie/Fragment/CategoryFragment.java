@@ -82,22 +82,14 @@ public class CategoryFragment extends Fragment {
         call.enqueue(new Callback<Page<CategoryResponse>>() {
             @Override
             public void onResponse(Call<Page<CategoryResponse>> call, Response<Page<CategoryResponse>> response) {
-                if (response.isSuccessful()) {
-                    Page<CategoryResponse> page = response.body();
-                    List<CategoryResponse> categories = page.getContent();
-                    adapterSearchCategories = new SearchCategoryAdapter(categories, getContext());
-                    rcvCategories.setAdapter(adapterSearchCategories);
-                } else {
-                    Log.e("category", String.valueOf(response.code()));
-                    Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin1", Toast.LENGTH_SHORT).show();
-                }
-
+                Page<CategoryResponse> page = response.body();
+                List<CategoryResponse> categories = page.getContent();
+                adapterSearchCategories = new SearchCategoryAdapter(categories, getContext());
+                rcvCategories.setAdapter(adapterSearchCategories);
             }
 
             @Override
             public void onFailure(Call<Page<CategoryResponse>> call, Throwable t) {
-                Log.e("category2", t.getMessage());
-                Toast.makeText(getContext(), "Vui lòng nhập đầy đủ thông tin2", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -126,5 +118,4 @@ public class CategoryFragment extends Fragment {
             }
         });
     }
-
 }

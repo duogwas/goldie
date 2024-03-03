@@ -19,7 +19,6 @@ import fithou.duogwas.goldie.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
-    BottomNavigationView bottomNavigationView;
 
 
     @Override
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.viewPager2, fragment);
+        fragmentTransaction.replace(R.id.FrameLayout, fragment);
         fragmentTransaction.commit();
     }
 }

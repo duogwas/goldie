@@ -50,46 +50,28 @@ public class PrimaryCategoryAdapter extends RecyclerView.Adapter<PrimaryCategory
         }
 
         holder.categoryName.setText(primaryCategories.getName());
-        Glide.with(context)
-                .load(primaryCategories.getImageBanner())
-                .into(holder.categoryPic);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.rcvSubCategories.getVisibility() == View.VISIBLE) {
-                    holder.rcvSubCategories.setVisibility(View.GONE);
-                } else {
-                    List<Category> categoriesSubList = primaryCategories.getCategories();
-                    holder.rcvSubCategories.setVisibility(View.VISIBLE);
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-                    holder.rcvSubCategories.setLayoutManager(linearLayoutManager);
-                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
-                    holder.rcvSubCategories.addItemDecoration(dividerItemDecoration);
-                    adapterSubCategories = new SubCategoryAdapter(categoriesSubList, context);
-                    holder.rcvSubCategories.setAdapter(adapterSubCategories);
-                    ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Bạn đã chọn: " + primaryCategories.getName(), ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
-                }
-            }
-        });
+        List<Category> categoriesSubList = primaryCategories.getCategories();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        holder.rcvSubCategories.setLayoutManager(linearLayoutManager);
+        adapterSubCategories = new SubCategoryAdapter(categoriesSubList, context);
+        holder.rcvSubCategories.setAdapter(adapterSubCategories);
+//        ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Bạn đã chọn: " + primaryCategories.getName(), ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
     }
 
-
-    @Override
-    public int getItemCount() {
+@Override
+public int getItemCount(){
         return categories.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView categoryName;
-        ImageView categoryPic;
-        RecyclerView rcvSubCategories;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            categoryName = itemView.findViewById(R.id.categoryName);
-            categoryPic = itemView.findViewById(R.id.categoryPic);
-            rcvSubCategories = itemView.findViewById(R.id.rcvSubCategories);
         }
+
+public class ViewHolder extends RecyclerView.ViewHolder {
+    TextView categoryName;
+    RecyclerView rcvSubCategories;
+
+    public ViewHolder(@NonNull View itemView) {
+        super(itemView);
+        categoryName = itemView.findViewById(R.id.tvPrimaryCategoryName);
+        rcvSubCategories = itemView.findViewById(R.id.rcvSubCategories);
     }
+}
 }
