@@ -35,7 +35,7 @@ import retrofit2.Response;
 import vn.thanguit.toastperfect.ToastPerfect;
 
 public class HomeFragment extends Fragment {
-    ViewPager2 viewPager2;
+    ViewPager2 smartSlider;
     TokenDto user;
     TextView tvHiName;
     private RecyclerView.Adapter adapterCategories;
@@ -62,21 +62,23 @@ public class HomeFragment extends Fragment {
     }
 
     private void AnhXa() {
-        viewPager2 = getView().findViewById(R.id.smartSlider);
-        tvHiName=getView().findViewById(R.id.tvHiName);
-    }
-    private void Slide() {
-        List<SliderItem> sliderItems = new ArrayList<>();
-        sliderItems.add(new SliderItem(R.drawable.banner_1,"image 1"));
-        sliderItems.add(new SliderItem(R.drawable.banner_2,"image 2"));
-        viewPager2.setAdapter(new SliderAdapter(sliderItems,viewPager2,3500));
-    }
-    private void LoadUserInfor() {
-        user = ObjectSharedPreferences.getSavedObjectFromPreference(getContext(), "User", "MODE_PRIVATE", TokenDto.class);
-        tvHiName.setText("Xin chào,\n"+ user.getUser().getFullname());
+        smartSlider = getView().findViewById(R.id.smartSlider);
+        tvHiName = getView().findViewById(R.id.tvHiName);
     }
 
-    private void LoadCategoriesList(){
+    private void Slide() {
+        List<SliderItem> sliderItems = new ArrayList<>();
+        sliderItems.add(new SliderItem(R.drawable.banner_1, "image 1"));
+        sliderItems.add(new SliderItem(R.drawable.banner_2, "image 2"));
+        smartSlider.setAdapter(new SliderAdapter(sliderItems, smartSlider, 3500));
+    }
+
+    private void LoadUserInfor() {
+        user = ObjectSharedPreferences.getSavedObjectFromPreference(getContext(), "User", "MODE_PRIVATE", TokenDto.class);
+        tvHiName.setText("Xin chào,\n" + user.getUser().getFullname());
+    }
+
+    private void LoadCategoriesList() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rcvCategories = getView().findViewById(R.id.rcvCategories);
         rcvCategories.setLayoutManager(linearLayoutManager);
