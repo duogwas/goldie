@@ -15,17 +15,25 @@ import fithou.duogwas.goldie.Entity.ProductImage;
 
 public class ProductResponse {
     private Long id;
+
     private String code;
+
     private String alias;
+
     private String name;
+
     private String imageBanner;
+
     private Double price;
+
     private String description;
-//    private Date createdDate;
-//    private Time createdTime;
+
     private Integer quantitySold;
+
     private List<ProductColor> productColors = new ArrayList<>();
+
     private List<ProductCategory> productCategories = new ArrayList<>();
+
     private List<ProductImage> productImages = new ArrayList<>();
 
     public Long getId() {
@@ -83,22 +91,6 @@ public class ProductResponse {
     public void setDescription(String description) {
         this.description = description;
     }
-
-//    public Date getCreatedDate() {
-//        return createdDate;
-//    }
-//
-//    public void setCreatedDate(Date createdDate) {
-//        this.createdDate = createdDate;
-//    }
-//
-//    public Time getCreatedTime() {
-//        return createdTime;
-//    }
-//
-//    public void setCreatedTime(Time createdTime) {
-//        this.createdTime = createdTime;
-//    }
 
     public Integer getQuantitySold() {
         return quantitySold;

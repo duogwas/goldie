@@ -9,8 +9,12 @@ import java.util.List;
 
 public class ProductColor {
     private Long id;
+
     private String colorName;
+
     private String linkImage;
+
     private Product product;
+
     private List<ProductSize> productSizes = new ArrayList<>();
 }

@@ -6,7 +6,10 @@ package fithou.duogwas.goldie.Entity;
 
 public class ProductSize {
     private Long id;
+
     private String sizeName;
+
     private Integer quantity;
+
     private ProductColor productColor;
 }

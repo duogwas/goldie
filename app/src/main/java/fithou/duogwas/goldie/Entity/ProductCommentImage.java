@@ -6,6 +6,8 @@ package fithou.duogwas.goldie.Entity;
 
 public class ProductCommentImage {
     private Long id;
+
     private String linkImage;
+
     private ProductComment productComment;
 }

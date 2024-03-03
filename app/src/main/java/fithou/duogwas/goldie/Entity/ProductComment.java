@@ -10,11 +10,14 @@ import java.util.List;
 
 public class ProductComment {
     private Long id;
+
     private Float star;
+
     private String content;
-    private Date createdDate;
-    private Time createdTime;
+
     private Product product;
+
     private User user;
+
     private List<ProductCommentImage> productCommentImages;
 }

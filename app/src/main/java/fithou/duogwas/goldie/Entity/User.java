@@ -21,8 +21,6 @@ public class User {
 
     String activation_key;
 
-//    Date createdDate;
-
     String tokenFcm;
 
     Authority authorities;
@@ -38,7 +36,6 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", actived=" + actived +
                 ", activation_key='" + activation_key + '\'' +
-//                ", createdDate=" + createdDate +
                 ", tokenFcm='" + tokenFcm + '\'' +
                 ", authorities=" + authorities +
                 '}';
@@ -119,14 +116,6 @@ public class User {
     public void setActivation_key(String activation_key) {
         this.activation_key = activation_key;
     }
-
-//    public Date getCreatedDate() {
-//        return createdDate;
-//    }
-//
-//    public void setCreatedDate(Date createdDate) {
-//        this.createdDate = createdDate;
-//    }
 
     public String getTokenFcm() {
         return tokenFcm;
