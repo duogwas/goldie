@@ -2,10 +2,12 @@ package fithou.duogwas.goldie.Adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +20,8 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+import fithou.duogwas.goldie.Activity.ProductDetailActivity;
+import fithou.duogwas.goldie.Activity.SignInActivity;
 import fithou.duogwas.goldie.Entity.Category;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.CategoryResponse;
@@ -54,6 +58,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         Glide.with(context)
                 .load(productResponse.getImageBanner())
                 .into(holder.imgProductImage);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ProductDetailActivity.class);
+                intent.putExtra("idProduct", productResponse.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

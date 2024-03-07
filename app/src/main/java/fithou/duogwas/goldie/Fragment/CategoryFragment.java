@@ -8,16 +8,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.util.List;
 
-import fithou.duogwas.goldie.Adapter.CategoryAdapter;
 import fithou.duogwas.goldie.Adapter.PrimaryCategoryAdapter;
 import fithou.duogwas.goldie.Adapter.SearchCategoryAdapter;
 import fithou.duogwas.goldie.R;
@@ -30,7 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CategoryFragment extends Fragment {
-    private RecyclerView.Adapter adapterPrimaryCategories, adapterSearchCategories;
+    RecyclerView.Adapter adapterPrimaryCategories, adapterSearchCategories;
     RecyclerView rcvCategories;
     android.widget.SearchView searchView;
 

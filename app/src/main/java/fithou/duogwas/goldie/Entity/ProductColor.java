@@ -17,4 +17,44 @@ public class ProductColor {
     private Product product;
 
     private List<ProductSize> productSizes = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getColorName() {
+        return colorName;
+    }
+
+    public void setColorName(String colorName) {
+        this.colorName = colorName;
+    }
+
+    public String getLinkImage() {
+        return linkImage;
+    }
+
+    public void setLinkImage(String linkImage) {
+        this.linkImage = linkImage;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public List<ProductSize> getProductSizes() {
+        return productSizes;
+    }
+
+    public void setProductSizes(List<ProductSize> productSizes) {
+        this.productSizes = productSizes;
+    }
 }

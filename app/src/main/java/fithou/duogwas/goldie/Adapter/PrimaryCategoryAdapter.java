@@ -17,7 +17,7 @@ import fithou.duogwas.goldie.Entity.Category;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.CategoryResponse;
 
-public class PrimaryCategoryAdapter extends RecyclerView.Adapter<PrimaryCategoryAdapter.ViewHolder> {
+public class PrimaryCategoryAdapter extends RecyclerView.Adapter<PrimaryCategoryAdapter.ViewHolder>{
     List<CategoryResponse> categories;
     private RecyclerView.Adapter adapterSubCategories;
     Context context;
@@ -48,7 +48,6 @@ public class PrimaryCategoryAdapter extends RecyclerView.Adapter<PrimaryCategory
         holder.rcvSubCategories.setLayoutManager(linearLayoutManager);
         adapterSubCategories = new SubCategoryAdapter(categoriesSubList, context);
         holder.rcvSubCategories.setAdapter(adapterSubCategories);
-//        ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Bạn đã chọn: " + primaryCategories.getName(), ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
     }
 
     @Override

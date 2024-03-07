@@ -17,4 +17,7 @@ public interface ProductService {
     @GET("product/public/findAll")
     Call<Page<ProductResponse>> getProductPage(@Query("page") int page,
                                                @Query("size") int size);
+
+    @GET("product/public/findById")
+    Call<ProductResponse> getProductDetail (@Query("id") Long id);
 }

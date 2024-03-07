@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment {
     ViewPager2 smartSlider;
     TokenDto user;
     TextView tvHiName;
-    private RecyclerView.Adapter adapterCategories, adapterProduct;
+    RecyclerView.Adapter adapterCategories, adapterProduct;
     RecyclerView rcvCategories, rcvNewProducts;
 
     public HomeFragment() {

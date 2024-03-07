@@ -45,13 +45,6 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
         Glide.with(context)
                 .load(subCategories.getImageBanner())
                 .into(holder.categoryPic);
-
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Bạn đã chọn: " + subCategories.getName(), ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
     @Override
@@ -60,7 +53,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView categoryName;
+        TextView categoryName, tv2;
         ImageView categoryPic;
 
         public ViewHolder(@NonNull View itemView) {
