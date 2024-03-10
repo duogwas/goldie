@@ -2,6 +2,7 @@ package fithou.duogwas.goldie.Adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import fithou.duogwas.goldie.Activity.ProductActivity;
+import fithou.duogwas.goldie.Activity.ProductDetailActivity;
 import fithou.duogwas.goldie.Entity.Category;
 import fithou.duogwas.goldie.R;
 
@@ -45,6 +48,16 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
         Glide.with(context)
                 .load(subCategories.getImageBanner())
                 .into(holder.categoryPic);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ProductActivity.class);
+                intent.putExtra("idCategory", subCategories.getId());
+                intent.putExtra("nameCategory",subCategories.getName());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

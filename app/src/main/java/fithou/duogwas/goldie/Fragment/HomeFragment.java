@@ -1,5 +1,6 @@
 package fithou.duogwas.goldie.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.bdtopcoder.smart_slider.SliderItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import fithou.duogwas.goldie.Activity.ProductActivity;
 import fithou.duogwas.goldie.Adapter.CategoryAdapter;
 import fithou.duogwas.goldie.Adapter.ProductAdapter;
 import fithou.duogwas.goldie.Adapter.SearchCategoryAdapter;
@@ -44,7 +46,7 @@ import vn.thanguit.toastperfect.ToastPerfect;
 public class HomeFragment extends Fragment {
     ViewPager2 smartSlider;
     TokenDto user;
-    TextView tvHiName;
+    TextView tvHiName, tvSeeAllProduct;
     RecyclerView.Adapter adapterCategories, adapterProduct;
     RecyclerView rcvCategories, rcvNewProducts;
 
@@ -67,11 +69,20 @@ public class HomeFragment extends Fragment {
         LoadUserInfor();
         LoadCategoriesList();
         LoadProductList();
+
+        tvSeeAllProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ProductActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void AnhXa() {
         smartSlider = getView().findViewById(R.id.smartSlider);
         tvHiName = getView().findViewById(R.id.tvHiName);
+        tvSeeAllProduct = getView().findViewById(R.id.tvSeeAllProduct);
     }
 
     private void Slide() {
@@ -107,30 +118,29 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void LoadProductList(){
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
-        rcvNewProducts=getView().findViewById(R.id.rcvNewProducts);
+    private void LoadProductList() {
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        rcvNewProducts = getView().findViewById(R.id.rcvNewProducts);
         rcvNewProducts.setLayoutManager(gridLayoutManager);
         ProductService productService = ApiUtils.getProductAPIService();
         Call<Page<ProductResponse>> call = productService.getProductPage(0, 10);
         call.enqueue(new Callback<Page<ProductResponse>>() {
             @Override
             public void onResponse(Call<Page<ProductResponse>> call, Response<Page<ProductResponse>> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Page<ProductResponse> page = response.body();
                     List<ProductResponse> product = page.getContent();
                     adapterProduct = new ProductAdapter(product, getContext());
                     rcvNewProducts.setAdapter(adapterProduct);
-                }
-                else {
-                    Log.e("loi1","loi k thanh cong");
+                } else {
+                    Log.e("loi1", "loi k thanh cong");
                 }
 
             }
 
             @Override
             public void onFailure(Call<Page<ProductResponse>> call, Throwable t) {
-                Log.e("loi2","loi k ket noi" + t.getMessage());
+                Log.e("loi2", "loi k ket noi" + t.getMessage());
             }
         });
 

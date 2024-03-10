@@ -68,7 +68,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/back" />
+                        app:srcCompat="@drawable/ic_back" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -164,7 +164,7 @@
                     android:layout_height="38dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/next" />
+                    app:srcCompat="@drawable/ic_next" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView

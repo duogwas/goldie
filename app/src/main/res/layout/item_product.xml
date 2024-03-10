@@ -21,7 +21,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:background="@drawable/bg_bot_top_right_radius"
+        android:background="@drawable/bg_btn_bt_right_corners_5"
         android:backgroundTint="#B0BEC5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -45,7 +45,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@drawable/bg_btn_return_login"
+        android:background="@drawable/bg_btn_white_corners_7"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
