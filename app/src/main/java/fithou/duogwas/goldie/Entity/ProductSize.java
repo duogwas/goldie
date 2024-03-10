@@ -4,7 +4,9 @@ package fithou.duogwas.goldie.Entity;
 //
 
 
-public class ProductSize {
+import java.io.Serializable;
+
+public class ProductSize implements Serializable {
     private Long id;
 
     private String sizeName;

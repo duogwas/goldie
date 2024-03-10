@@ -4,11 +4,12 @@ package fithou.duogwas.goldie.Entity;
 //
 
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
-public class ProductComment {
+public class ProductComment implements Serializable {
     private Long id;
 
     private Float star;

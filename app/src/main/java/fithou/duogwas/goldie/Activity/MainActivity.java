@@ -8,11 +8,9 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import fithou.duogwas.goldie.Fragment.CartFragment;
 import fithou.duogwas.goldie.Fragment.CategoryFragment;
 import fithou.duogwas.goldie.Fragment.HomeFragment;
-import fithou.duogwas.goldie.Fragment.BlogFragment;
 import fithou.duogwas.goldie.Fragment.ProfileFragment;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.databinding.ActivityMainBinding;
@@ -39,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(new CategoryFragment());
                     break;
                 case R.id.menu_news:
-                    replaceFragment(new BlogFragment());
+                    replaceFragment(new CartFragment());
                     break;
                 case R.id.menu_profile:
                     replaceFragment(new ProfileFragment());

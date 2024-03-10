@@ -6,6 +6,7 @@ package fithou.duogwas.goldie.Retrofit;
 
 import java.util.List;
 
+import fithou.duogwas.goldie.Entity.ProductSize;
 import fithou.duogwas.goldie.Response.CategoryResponse;
 import fithou.duogwas.goldie.Response.Page;
 import fithou.duogwas.goldie.Response.ProductResponse;
@@ -25,4 +26,7 @@ public interface ProductService {
     Call<Page<ProductResponse>> getProductByCategory(@Query("idCategory") long idCategory,
                                                      @Query("page") int page,
                                                      @Query("size") int size);
+
+    @GET("product-size/public/find-by-product-color")
+    Call<List<ProductSize>> getSizeByColor(@Query("idProColor") Long idProColor);
 }

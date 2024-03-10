@@ -4,8 +4,12 @@ package fithou.duogwas.goldie.Entity;
 //
 
 
-public class ProductCategory {
+import java.io.Serializable;
+
+public class ProductCategory implements Serializable {
     private Long id;
+
     private Product product;
+
     private Category category;
 }

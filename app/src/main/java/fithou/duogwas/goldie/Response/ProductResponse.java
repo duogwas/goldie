@@ -4,6 +4,7 @@ package fithou.duogwas.goldie.Response;
 //
 
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import fithou.duogwas.goldie.Entity.ProductCategory;
 import fithou.duogwas.goldie.Entity.ProductColor;
 import fithou.duogwas.goldie.Entity.ProductImage;
 
-public class ProductResponse {
+public class ProductResponse implements Serializable {
     private Long id;
 
     private String code;

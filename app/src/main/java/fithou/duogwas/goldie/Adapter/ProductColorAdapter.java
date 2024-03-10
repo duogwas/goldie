@@ -5,12 +5,16 @@ package fithou.duogwas.goldie.Adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,23 +23,40 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fithou.duogwas.goldie.Activity.ProductDetailActivity;
 import fithou.duogwas.goldie.Entity.ProductColor;
 import fithou.duogwas.goldie.Entity.ProductSize;
 import fithou.duogwas.goldie.R;
 
 
-public class ProductColorAdapter extends RecyclerView.Adapter<ProductColorAdapter.ViewHolder>{
+public class ProductColorAdapter extends RecyclerView.Adapter<ProductColorAdapter.ViewHolder> {
     List<ProductColor> productColor;
     Context context;
-    ProductSizeAdapter sizeAdapter;
-    RecyclerView rcvSize;
+    TextView tvColorName, tvSizeName;
+    ConstraintLayout clSize;
+    private int selectedItemPosition = -1;
 
-    public ProductColorAdapter(List<ProductColor> productColor, Context context, ProductSizeAdapter sizeAdapter, RecyclerView rcvSize) {
+
+    public ProductColorAdapter(List<ProductColor> productColor, Context context, TextView tvColorName, ConstraintLayout clSize, TextView tvSizeName) {
         this.productColor = productColor;
         this.context = context;
-        this.sizeAdapter = sizeAdapter;
-        this.rcvSize = rcvSize;
+        this.tvColorName = tvColorName;
+        this.clSize = clSize;
+        this.tvSizeName = tvSizeName;
     }
+
+    public interface OnColorClickListener {
+        void onColorClick(Long idColor);
+    }
+
+    // Trong adapter của bạn, khởi tạo một instance của interface này
+    private OnColorClickListener onColorClickListener;
+
+    // Phương thức để set listener
+    public void setOnColorClickListener(OnColorClickListener listener) {
+        this.onColorClickListener = listener;
+    }
+
 
     @NonNull
     @Override
@@ -51,18 +72,30 @@ public class ProductColorAdapter extends RecyclerView.Adapter<ProductColorAdapte
             return;
         }
 
+        if (selectedItemPosition == position) {
+            holder.clAvt.setBackgroundResource(R.drawable.bg_item_size_select);
+        } else {
+            holder.clAvt.setBackgroundResource(R.drawable.bg_item_category);
+        }
+
         Glide.with(context)
                 .load(color.getLinkImage())
                 .into(holder.imgColorPic);
 
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<ProductSize> size = color.getProductSizes();
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                rcvSize.setLayoutManager(linearLayoutManager);
-                sizeAdapter = new ProductSizeAdapter(size, context);
-                rcvSize.setAdapter(sizeAdapter);
+                selectedItemPosition = position;
+                notifyDataSetChanged();
+                clSize.setVisibility(View.VISIBLE);
+                tvSizeName.setText("Vui lòng chọn kích thước sản phẩm");
+                Long idColor = color.getId();
+                tvColorName.setText(color.getColorName());
+                if (onColorClickListener != null) {
+                    onColorClickListener.onColorClick(idColor);
+                }
+
             }
         });
     }
@@ -74,10 +107,12 @@ public class ProductColorAdapter extends RecyclerView.Adapter<ProductColorAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView imgColorPic;
+        ConstraintLayout clAvt;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imgColorPic = itemView.findViewById(R.id.imgColorPic);
+            clAvt = itemView.findViewById(R.id.clAvt);
         }
     }
 }

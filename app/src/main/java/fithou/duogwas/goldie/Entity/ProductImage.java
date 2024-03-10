@@ -4,7 +4,9 @@ package fithou.duogwas.goldie.Entity;
 //
 
 
-public class ProductImage {
+import java.io.Serializable;
+
+public class ProductImage implements Serializable {
     private Long id;
 
     private String linkImage;
