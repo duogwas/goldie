@@ -68,7 +68,6 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
     ConstraintLayout clSize, clDescription;
     ProductResponse productResponse;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +77,6 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         setOnClick();
         getIdProduct();
         LoadProductDetail();
-
     }
 
     private void initView() {
@@ -165,6 +163,95 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         imageSlider.startAutoCycle();
     }
 
+    private void getSizeByColor(Long idColorr) {
+        ProductService productService = ApiUtils.getProductAPIService();
+        Call<List<ProductSize>> call = productService.getSizeByColor(idColorr);
+        call.enqueue(new Callback<List<ProductSize>>() {
+            @Override
+            public void onResponse(Call<List<ProductSize>> call, Response<List<ProductSize>> response) {
+                List<ProductSize> size = response.body();
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ProductDetailActivity.this, LinearLayoutManager.HORIZONTAL, false);
+                rcvSize.setLayoutManager(linearLayoutManager);
+                adapterSize = new ProductSizeAdapter(size, ProductDetailActivity.this, tvSizeName);
+                rcvSize.setAdapter(adapterSize);
+
+                adapterSize.setOnSizeClickListener(new ProductSizeAdapter.OnSizeClickListener() {
+                    @Override
+                    public void onSizeClick(Long idSize) {
+                        idSizeCart = idSize;
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<List<ProductSize>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void addToCart(ProductResponse product) {
+        List<ProductCart> productCartList = CartManager.getCart(this);
+        ProductColor color = null;
+        ProductSize size = null;
+        int quantity;
+        quantity = parseInt(tvQuantity.getText().toString());
+
+        if(idColorCart==null){
+            ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.ERROR, "Vui lòng chọn màu sắc sản phẩm", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+        } else if (idSizeCart==null) {
+            ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.ERROR, "Vui lòng chọn kích thước sản phẩm", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+        }
+
+        List<ProductColor> listColor = product.getProductColors();
+        for (ProductColor productColor : listColor) {
+            if (productColor.getId().equals(idColorCart)) {
+                color = productColor;
+                break;
+            }
+        }
+
+        if (color == null) {
+            Log.e("AddToCart", "Color null");
+            return;
+        }
+
+        List<ProductSize> listSize = color.getProductSizes();
+        for (ProductSize productSize : listSize) {
+            if (productSize.getId().equals(idSizeCart)) {
+                size = productSize;
+                break;
+            }
+        }
+        if (size == null) {
+            Log.e("AddToCart", "Size null");
+            return;
+        }
+
+        // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+        boolean productAlreadyInCart = false;
+        for (ProductCart cartProduct : productCartList) {
+            if (cartProduct.getProduct().getId().equals(product.getId()) &&
+                    cartProduct.getColor().getId().equals(color.getId()) &&
+                    cartProduct.getSize().getId().equals(size.getId())) {
+                // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng
+                cartProduct.setQuantity(cartProduct.getQuantity() + quantity);
+                productAlreadyInCart = true;
+                break;
+            }
+        }
+
+        // Nếu sản phẩm chưa có trong giỏ hàng, thêm sản phẩm mới vào giỏ hàng
+        if (!productAlreadyInCart) {
+            ProductCart productCart = new ProductCart(product, color, size, quantity);
+            productCartList.add(productCart);
+        }
+
+        // Lưu danh sách sản phẩm cart vào SharedPreferences
+        CartManager.saveCart(this, productCartList);
+        ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.SUCCESS, "Thêm vào giỏ hàng thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -211,93 +298,5 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
             default:
                 break;
         }
-    }
-
-
-    private void getSizeByColor(Long idColorr) {
-        ProductService productService = ApiUtils.getProductAPIService();
-        Call<List<ProductSize>> call = productService.getSizeByColor(idColorr);
-        call.enqueue(new Callback<List<ProductSize>>() {
-            @Override
-            public void onResponse(Call<List<ProductSize>> call, Response<List<ProductSize>> response) {
-                List<ProductSize> size = response.body();
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ProductDetailActivity.this, LinearLayoutManager.HORIZONTAL, false);
-                rcvSize.setLayoutManager(linearLayoutManager);
-                adapterSize = new ProductSizeAdapter(size, ProductDetailActivity.this, tvSizeName);
-                rcvSize.setAdapter(adapterSize);
-
-                adapterSize.setOnSizeClickListener(new ProductSizeAdapter.OnSizeClickListener() {
-                    @Override
-                    public void onSizeClick(Long idSize) {
-                        idSizeCart = idSize;
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<List<ProductSize>> call, Throwable t) {
-
-            }
-        });
-    }
-
-
-    private void addToCart(ProductResponse product) {
-        List<ProductCart> productCartList = CartManager.getCart(this);
-        ProductColor color = null;
-        ProductSize size = null;
-        int quantity;
-        quantity = parseInt(tvQuantity.getText().toString());
-
-        List<ProductColor> listColor = product.getProductColors();
-        for (ProductColor productColor : listColor) {
-            if (productColor.getId().equals(idColorCart)) {
-                color = productColor;
-                break;
-            }
-        }
-
-        if (color == null) {
-//            Toast.makeText(this, "clnull", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        List<ProductSize> listSize = color.getProductSizes();
-        for (ProductSize productSize : listSize) {
-            if (productSize.getId().equals(idSizeCart)) {
-                size = productSize;
-                break;
-            }
-        }
-        if (size == null) {
-//            Toast.makeText(this, "sznull", Toast.LENGTH_SHORT).show();
-            return;
-        }
-//
-//        ProductCart productCart = new ProductCart(product, color, size, quantity);
-//        productCartList.add(productCart);
-
-        // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-        boolean productAlreadyInCart = false;
-        for (ProductCart cartProduct : productCartList) {
-            if (cartProduct.getProduct().getId().equals(product.getId()) &&
-                    cartProduct.getColor().getId().equals(color.getId()) &&
-                    cartProduct.getSize().getId().equals(size.getId())) {
-                // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng
-                cartProduct.setQuantity(cartProduct.getQuantity() + quantity);
-                productAlreadyInCart = true;
-                break;
-            }
-        }
-
-        // Nếu sản phẩm chưa có trong giỏ hàng, thêm sản phẩm mới vào giỏ hàng
-        if (!productAlreadyInCart) {
-            ProductCart productCart = new ProductCart(product, color, size, quantity);
-            productCartList.add(productCart);
-        }
-
-        // Lưu danh sách sản phẩm cart vào SharedPreferences
-        CartManager.saveCart(this, productCartList);
-        ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.SUCCESS, "Thêm vào giỏ hàng thành công", ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
     }
 }

@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.menu_category:
                     replaceFragment(new CategoryFragment());
                     break;
-                case R.id.menu_news:
+                case R.id.menu_cart:
                     replaceFragment(new CartFragment());
                     break;
                 case R.id.menu_profile:

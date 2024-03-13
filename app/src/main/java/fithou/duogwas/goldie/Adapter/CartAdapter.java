@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +24,7 @@ import fithou.duogwas.goldie.Activity.ProductDetailActivity;
 import fithou.duogwas.goldie.Entity.ProductCart;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.ProductResponse;
+import fithou.duogwas.goldie.Utils.CartManager;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     List<ProductCart> productCart;
@@ -46,10 +49,44 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             return;
         }
 
-        holder.pnam.setText(cart.getProduct().getName());
-        holder.pquantity.setText(String.valueOf(cart.getQuantity()));
-        holder.psz.setText(cart.getSize().getSizeName());
-        holder.pcl.setText(cart.getColor().getColorName());
+        Glide.with(context)
+                .load(cart.getProduct().getImageBanner())
+                .into(holder.ivImage);
+        holder.tvName.setText(cart.getProduct().getName());
+        holder.tvOption.setText("Màu " + cart.getColor().getColorName() + ", Size " + cart.getSize().getSizeName());
+        holder.tvCount.setText(String.valueOf(cart.getQuantity()));
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        String formattedPrice = currencyFormat.format(cart.getProduct().getPrice());
+        holder.tvTotalPrice.setText(formattedPrice);
+
+        holder.ivPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cart.getQuantity() >= cart.getSize().getQuantity()) {
+                    return;
+                }
+                cart.setQuantity(cart.getQuantity() + 1);
+                holder.tvCount.setText(String.valueOf(cart.getQuantity()));
+                productCart.set(position, cart);
+                CartManager.saveCart(context, productCart);
+                notifyDataSetChanged();
+                Toast.makeText(context, "id: " + cart.getId(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.ivMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cart.getQuantity() <= 1) {
+                    return;
+                }
+                cart.setQuantity(cart.getQuantity() - 1);
+                holder.tvCount.setText(String.valueOf(cart.getQuantity()));
+                productCart.set(position, cart);
+                CartManager.saveCart(context, productCart);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -58,17 +95,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView pnam;
-        TextView pquantity;
-        TextView psz;
-        TextView pcl;
+        ImageView ivImage, ivPlus, ivMinus;;
+        TextView tvName, tvOption, tvCount, tvTotalPrice;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            pnam = itemView.findViewById(R.id.pnam);
-            pquantity = itemView.findViewById(R.id.pquantity);
-            psz = itemView.findViewById(R.id.psz);
-            pcl = itemView.findViewById(R.id.pcl);
+            ivImage = itemView.findViewById(R.id.ivImage);
+            ivPlus=itemView.findViewById(R.id.ivPlus);
+            ivMinus=itemView.findViewById(R.id.ivMinus);
+            tvName = itemView.findViewById(R.id.tvProductName);
+            tvOption = itemView.findViewById(R.id.tvOption);
+            tvCount = itemView.findViewById(R.id.tvCount);
+            tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
         }
     }
 }

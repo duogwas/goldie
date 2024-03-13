@@ -7,8 +7,9 @@ package fithou.duogwas.goldie.Retrofit;
 public class ApiUtils {
     private ApiUtils() {}
 
-//    public static final String BASE_URL = "http://172.16.15.244:8080/api/"; //cty
-    public static final String BASE_URL = "http://192.168.1.61:8080/api/";  //home
+    public static final String BASE_URL = "http://172.16.15.187:8080/api/"; //cty
+//    public static final String BASE_URL = "http://192.168.1.61:8080/api/";  //home
+//    public static final String BASE_URL = "http://172.20.10.4:8080/api/";  //4g
 
     public static UserService getUserAPIService() {
         return RetrofitClient.getClient(BASE_URL).create(UserService.class);

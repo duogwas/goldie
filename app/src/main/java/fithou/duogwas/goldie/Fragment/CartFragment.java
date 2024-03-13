@@ -54,7 +54,6 @@ public class CartFragment extends Fragment {
         List<ProductCart> cartProducts = CartManager.getCart(getContext());
         cartAdapter= new CartAdapter(cartProducts,getContext());
         recyclerView.setAdapter(cartAdapter);
-        Toast.makeText(getContext(), "haha " + cartProducts.size(), Toast.LENGTH_SHORT).show();
     }
 
 }
