@@ -80,5 +80,6 @@ public class CategoryResponse {
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
+
 }
 

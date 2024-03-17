@@ -35,6 +35,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         this.context = context;
     }
 
+    public interface OnQuantityChangeListener {
+        void onQuantityChange(int position, int quantity);
+    }
+
+    private OnQuantityChangeListener quantityChangeListener;
+
+    public void setQuantityChangeListener(OnQuantityChangeListener listener) {
+        this.quantityChangeListener = listener;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,10 +69,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         String formattedPrice = currencyFormat.format(cart.getProduct().getPrice());
         holder.tvTotalPrice.setText(formattedPrice);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "id: " + cart.getId(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         holder.ivPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (cart.getQuantity() >= cart.getSize().getQuantity()) {
+                    Toast.makeText(context, "max rồi", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 cart.setQuantity(cart.getQuantity() + 1);
@@ -70,7 +88,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 productCart.set(position, cart);
                 CartManager.saveCart(context, productCart);
                 notifyDataSetChanged();
-                Toast.makeText(context, "id: " + cart.getId(), Toast.LENGTH_SHORT).show();
+                if (quantityChangeListener != null) {
+                    quantityChangeListener.onQuantityChange(position, cart.getQuantity());
+                }
             }
         });
 
@@ -78,6 +98,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 if (cart.getQuantity() <= 1) {
+                    Toast.makeText(context, "min rồi", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 cart.setQuantity(cart.getQuantity() - 1);
@@ -85,6 +106,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 productCart.set(position, cart);
                 CartManager.saveCart(context, productCart);
                 notifyDataSetChanged();
+                if (quantityChangeListener != null) {
+                    quantityChangeListener.onQuantityChange(position, cart.getQuantity());
+                }
             }
         });
     }

@@ -9,7 +9,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -36,9 +35,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProductActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProductByCategoryActivity extends AppCompatActivity implements View.OnClickListener {
     String nameCategory;
     Long idCategory;
+    String sort="";
     TextView tvName;
     RecyclerView rcvProduct;
     SearchView searchView;
@@ -51,7 +51,7 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_product);
+        setContentView(R.layout.activity_product_by_category);
         initView();
         getData();
         setOnClick();
@@ -72,14 +72,7 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
         nameCategory = intent.getStringExtra("nameCategory");
         idCategory = intent.getLongExtra("idCategory", -1);
         tvName.setText(nameCategory);
-        if (nameCategory == null) {
-            tvName.setText("danh sách sản phẩm");
-        }
-        if (idCategory == -1) {
-            getFullProduct();
-        } else {
-            getProductByCategory();
-        }
+        getProductByCategory(sort);
     }
 
     private void setOnClick() {
@@ -88,44 +81,19 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
         imgBack.setOnClickListener(this);
     }
 
-    private void getFullProduct() {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(ProductActivity.this, 2);
+
+    private void getProductByCategory(String sort) {
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(ProductByCategoryActivity.this, 2);
         rcvProduct.setLayoutManager(gridLayoutManager);
         ProductService productService = ApiUtils.getProductAPIService();
-        Call<Page<ProductResponse>> call = productService.getProductPage(0, 10);
+        Call<Page<ProductResponse>> call = productService.getProductByCategory(idCategory, 0, 10, sort);
         call.enqueue(new Callback<Page<ProductResponse>>() {
             @Override
             public void onResponse(Call<Page<ProductResponse>> call, Response<Page<ProductResponse>> response) {
                 if (response.isSuccessful()) {
                     Page<ProductResponse> page = response.body();
                     List<ProductResponse> product = page.getContent();
-                    ProductAdapter productAdapter = new ProductAdapter(product, ProductActivity.this);
-                    rcvProduct.setAdapter(productAdapter);
-                } else {
-                    Log.e("getFullProduct", "Lỗi phản hồi không thành công");
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<Page<ProductResponse>> call, Throwable t) {
-                Log.e("getFullProduct", "Lỗi kết nối" + t.getMessage());
-            }
-        });
-    }
-
-    private void getProductByCategory() {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(ProductActivity.this, 2);
-        rcvProduct.setLayoutManager(gridLayoutManager);
-        ProductService productService = ApiUtils.getProductAPIService();
-        Call<Page<ProductResponse>> call = productService.getProductByCategory(idCategory, 0, 10);
-        call.enqueue(new Callback<Page<ProductResponse>>() {
-            @Override
-            public void onResponse(Call<Page<ProductResponse>> call, Response<Page<ProductResponse>> response) {
-                if (response.isSuccessful()) {
-                    Page<ProductResponse> page = response.body();
-                    List<ProductResponse> product = page.getContent();
-                    ProductAdapter productAdapter = new ProductAdapter(product, ProductActivity.this);
+                    ProductAdapter productAdapter = new ProductAdapter(product, ProductByCategoryActivity.this);
                     rcvProduct.setAdapter(productAdapter);
                 } else {
                     Log.e("getProductByCategory", "Lỗi phản hồi không thành công");
@@ -141,11 +109,9 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void showDialog() {
-
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_bottom_sort);
-
         LinearLayout layoutNew = dialog.findViewById(R.id.layoutNew);
         LinearLayout layoutBest = dialog.findViewById(R.id.layoutBest);
         LinearLayout layoutCheap = dialog.findViewById(R.id.layoutCheap);
@@ -154,40 +120,36 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
         layoutNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sort="id,desc";
+                getProductByCategory(sort);
                 dialog.dismiss();
-                Toast.makeText(ProductActivity.this,"Edit is Clicked",Toast.LENGTH_SHORT).show();
-
             }
         });
 
         layoutBest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sort="quantitySold,desc";
+                getProductByCategory(sort);
                 dialog.dismiss();
-                Toast.makeText(ProductActivity.this,"Share is Clicked",Toast.LENGTH_SHORT).show();
-
             }
         });
 
         layoutCheap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sort="price,asc";
+                getProductByCategory(sort);
                 dialog.dismiss();
-                Toast.makeText(ProductActivity.this,"Upload is Clicked",Toast.LENGTH_SHORT).show();
-
             }
         });
 
         layoutExpensive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sort="price,desc";
+                getProductByCategory(sort);
                 dialog.dismiss();
-                Toast.makeText(ProductActivity.this,"Print is Clicked",Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -213,6 +175,5 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
             default:
                 break;
         }
-
     }
 }

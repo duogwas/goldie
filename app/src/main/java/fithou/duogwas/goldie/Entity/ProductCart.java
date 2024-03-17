@@ -5,26 +5,31 @@ package fithou.duogwas.goldie.Entity;
 
 
 import java.util.List;
+import java.util.Objects;
 
 import fithou.duogwas.goldie.Response.ProductResponse;
 
 public class ProductCart {
     private static int nextId = 0;  // Biến static để theo dõi ID tiếp theo
-    private int id;  // ID của CartItem
+    private long id;  // ID của CartItem
     ProductResponse product;
     ProductColor color;
     ProductSize size;
     int quantity;
 
     public ProductCart(ProductResponse product, ProductColor color, ProductSize size, int quantity) {
-        this.id = nextId++;  // Gán ID và tăng nextId lên 1
+        this.id = generateId(product.getId(), color.getId(), size.getId());
         this.product = product;
         this.color = color;
         this.size = size;
         this.quantity = quantity;
     }
 
-    public int getId() {
+    private int generateId(long productId, long colorId, long sizeId) {
+        return Objects.hash(productId, colorId, sizeId);
+    }
+
+    public long getId() {
         return id;
     }
 

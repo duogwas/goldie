@@ -5,7 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activity.ProductActivity">
+    tools:context=".Activity.FullProduct">
+
+    <FrameLayout
+        android:id="@+id/FrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -40,13 +46,13 @@
             android:layout_marginTop="13dp"
             android:fontFamily="@font/be_vietnam_bold"
             android:gravity="center"
-            android:text="BLACK WASHED TSHIRT"
+            android:text="danh sách sản phẩm"
+            android:textAllCaps="true"
             android:textColor="#000"
             android:textSize="25dp"
             app:layout_constraintStart_toEndOf="@+id/clBack"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <android.widget.SearchView
         android:id="@+id/searchView"

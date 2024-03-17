@@ -16,8 +16,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import fithou.duogwas.goldie.Activity.ProductActivity;
-import fithou.duogwas.goldie.Activity.ProductDetailActivity;
+import fithou.duogwas.goldie.Activity.ProductByCategoryActivity;
 import fithou.duogwas.goldie.Entity.Category;
 import fithou.duogwas.goldie.R;
 
@@ -52,7 +51,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ProductActivity.class);
+                Intent intent = new Intent(context, ProductByCategoryActivity.class);
                 intent.putExtra("idCategory", subCategories.getId());
                 intent.putExtra("nameCategory",subCategories.getName());
                 context.startActivity(intent);
@@ -66,7 +65,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView categoryName, tv2;
+        TextView categoryName;
         ImageView categoryPic;
 
         public ViewHolder(@NonNull View itemView) {
