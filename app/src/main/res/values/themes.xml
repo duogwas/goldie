@@ -20,9 +20,12 @@
     </style>
 
     <style name="ThemeOverlay.search" parent="Theme.Goldie">
-        <!-- Text color -->
         <item name="android:editTextColor">#000</item>
-        <!-- Hint text color -->
         <item name="android:textColorHint">#000</item>
+    </style>
+
+    <style name="BottomDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
 </resources>

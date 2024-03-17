@@ -10,9 +10,9 @@
         android:icon="@drawable/ic_category"
         android:title="Danh mục" />
     <item
-        android:id="@+id/menu_news"
-        android:icon="@drawable/ic_news"
-        android:title="Tin tức" />
+        android:id="@+id/menu_cart"
+        android:icon="@drawable/ic_cart"
+        android:title="Giỏ hàng" />
     <item
         android:id="@+id/menu_profile"
         android:icon="@drawable/ic_profile"

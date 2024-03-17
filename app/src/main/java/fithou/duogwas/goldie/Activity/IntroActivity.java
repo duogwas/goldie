@@ -8,10 +8,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import fithou.duogwas.goldie.Model.User;
+import fithou.duogwas.goldie.Entity.User;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Utils.ObjectSharedPreferences;
-import vn.thanguit.toastperfect.ToastPerfect;
 
 public class IntroActivity extends AppCompatActivity {
     TextView tvStart;

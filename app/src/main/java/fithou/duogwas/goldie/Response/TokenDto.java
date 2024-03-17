@@ -4,7 +4,7 @@ package fithou.duogwas.goldie.Response;
 //
 
 
-import fithou.duogwas.goldie.Model.User;
+import fithou.duogwas.goldie.Entity.User;
 
 public class TokenDto {
     private String token;

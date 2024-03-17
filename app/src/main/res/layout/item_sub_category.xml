@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="150dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="10dp"
-    app:cardCornerRadius="8dp">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imgSubCategoryPic"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="170dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_goldie"
+        app:riv_corner_radius="20dp" />
 
-        <ImageView
-            android:id="@+id/imgSubCategoryPic"
-            android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_goldie" />
+    <TextView
+        android:id="@+id/tvSubCategoryName"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:fontFamily="@font/be_vietnam_bold"
+        android:maxLines="1"
+        android:padding="6dp"
+        android:text="Áo nam"
+        android:textSize="17dp" />
+</LinearLayout>
 
-        <TextView
-            android:id="@+id/tvSubCategoryName"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/be_vietnam_bold"
-            android:padding="6dp"
-            android:text="Áo nam"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-</androidx.cardview.widget.CardView>

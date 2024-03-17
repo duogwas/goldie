@@ -1,13 +1,14 @@
-package fithou.duogwas.goldie.Model;
+package fithou.duogwas.goldie.Entity;
 //
 // Created by duogwas on 27/01/2024.
 //
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Category {
+public class Category implements Serializable {
 
     private Long id;
 

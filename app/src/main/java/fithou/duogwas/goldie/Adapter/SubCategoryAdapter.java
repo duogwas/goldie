@@ -2,6 +2,7 @@ package fithou.duogwas.goldie.Adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import fithou.duogwas.goldie.Model.Category;
+import fithou.duogwas.goldie.Activity.ProductByCategoryActivity;
+import fithou.duogwas.goldie.Entity.Category;
 import fithou.duogwas.goldie.R;
-import fithou.duogwas.goldie.Response.CategoryResponse;
-import vn.thanguit.toastperfect.ToastPerfect;
 
 public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.ViewHolder> {
     List<Category> categories;
@@ -50,12 +48,15 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
                 .load(subCategories.getImageBanner())
                 .into(holder.categoryPic);
 
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Bạn đã chọn: " + subCategories.getName(), ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
-//            }
-//        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ProductByCategoryActivity.class);
+                intent.putExtra("idCategory", subCategories.getId());
+                intent.putExtra("nameCategory",subCategories.getName());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

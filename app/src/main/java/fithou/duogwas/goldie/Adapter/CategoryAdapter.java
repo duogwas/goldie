@@ -2,13 +2,13 @@ package fithou.duogwas.goldie.Adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fithou.duogwas.goldie.Model.Category;
+import fithou.duogwas.goldie.Activity.ProductByCategoryActivity;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.CategoryResponse;
 import vn.thanguit.toastperfect.ToastPerfect;
@@ -51,8 +51,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Bạn đã chọn: " + categoryResponse.getName(), ToastPerfect.BOTTOM, ToastPerfect.LENGTH_SHORT).show();
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ProductByCategoryActivity.class);
+                intent.putExtra("idCategory", categoryResponse.getId());
+                intent.putExtra("nameCategory",categoryResponse.getName());
+                context.startActivity(intent);
             }
         });
     }
