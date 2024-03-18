@@ -23,4 +23,8 @@ public class ApiUtils {
     public static ProductService getProductAPIService() {
         return RetrofitClient.getClient(BASE_URL).create(ProductService.class);
     }
+
+    public static UserAddressService getUserAddressAPIService() {
+        return RetrofitClient.getClient(BASE_URL).create(UserAddressService.class);
+    }
 }

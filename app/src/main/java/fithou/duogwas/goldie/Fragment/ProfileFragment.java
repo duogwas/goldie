@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import fithou.duogwas.goldie.Activity.MyAddressActivity;
 import fithou.duogwas.goldie.Activity.SignInActivity;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Request.LoginDto;
@@ -194,6 +195,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.clAddress:
+                startActivity(new Intent(getContext(), MyAddressActivity.class));
                 break;
 
             case R.id.btnLogout:
