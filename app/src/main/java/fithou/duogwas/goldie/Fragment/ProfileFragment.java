@@ -39,7 +39,7 @@ import retrofit2.Response;
 import vn.thanguit.toastperfect.ToastPerfect;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-    TextView tvChangePassword;
+    TextView tvChangePassword, tvFullName, tvEmail, tvPhone;
     AppCompatButton btnLogout;
     ConstraintLayout clOrder, clAddress;
 
@@ -58,10 +58,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         initView();
         setOnClick();
+        loadUserInfor();
     }
 
     private void initView() {
         tvChangePassword = getView().findViewById(R.id.tvChangePassword);
+        tvFullName = getView().findViewById(R.id.tvFullName);
+        tvEmail = getView().findViewById(R.id.tvEmail);
+        tvPhone = getView().findViewById(R.id.tvPhone);
         btnLogout = getView().findViewById(R.id.btnLogout);
         clOrder = getView().findViewById(R.id.clOrder);
         clAddress = getView().findViewById(R.id.clAddress);
@@ -72,6 +76,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         btnLogout.setOnClickListener(this);
         clOrder.setOnClickListener(this);
         clAddress.setOnClickListener(this);
+    }
+
+    private void loadUserInfor() {
+        TokenDto user = UserManager.getSavedUser(getContext(), "User", "MODE_PRIVATE", TokenDto.class);
+        tvFullName.setText(user.getUser().getFullname());
+        tvEmail.setText(user.getUser().getEmail());
+        tvPhone.setText(user.getUser().getPhone());
     }
 
     private void showDialog() {
