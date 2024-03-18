@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import fithou.duogwas.goldie.Entity.User;
 import fithou.duogwas.goldie.R;
-import fithou.duogwas.goldie.Utils.ObjectSharedPreferences;
+import fithou.duogwas.goldie.Utils.UserManager;
 
 public class IntroActivity extends AppCompatActivity {
     TextView tvStart;
@@ -32,7 +32,7 @@ public class IntroActivity extends AppCompatActivity {
         tvStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User isLoged = ObjectSharedPreferences.getSavedObjectFromPreference(IntroActivity.this, "User", "MODE_PRIVATE", User.class);
+                User isLoged = UserManager.getSavedUser(IntroActivity.this, "User", "MODE_PRIVATE", User.class);
                 if (isLoged!=null){
                     startActivity(new Intent(IntroActivity.this, MainActivity.class));
                     finish();

@@ -17,39 +17,26 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.Serializable;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import fithou.duogwas.goldie.Adapter.CategoryAdapter;
 import fithou.duogwas.goldie.Adapter.ProductColorAdapter;
 import fithou.duogwas.goldie.Adapter.ProductImageSliderAdapter;
 import fithou.duogwas.goldie.Adapter.ProductSizeAdapter;
-import fithou.duogwas.goldie.Entity.Product;
 import fithou.duogwas.goldie.Entity.ProductCart;
 import fithou.duogwas.goldie.Entity.ProductColor;
-import fithou.duogwas.goldie.Entity.ProductImage;
 import fithou.duogwas.goldie.Entity.ProductSize;
 import fithou.duogwas.goldie.R;
-import fithou.duogwas.goldie.Response.CategoryResponse;
 import fithou.duogwas.goldie.Response.ProductResponse;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.ProductService;
 import fithou.duogwas.goldie.Utils.CartManager;
-import fithou.duogwas.goldie.Utils.ObjectSharedPreferences;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
