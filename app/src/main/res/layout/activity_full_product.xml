@@ -7,12 +7,6 @@
     android:orientation="vertical"
     tools:context=".Activity.FullProduct">
 
-    <FrameLayout
-        android:id="@+id/FrameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -61,7 +55,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/custom_edt_search"
+        android:background="@drawable/edt_search"
         android:iconifiedByDefault="false"
         android:queryBackground="@null"
         android:queryHint="Tìm kiếm..."

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fithou.duogwas.goldie.Activity.FullProduct;
-import fithou.duogwas.goldie.Activity.ProductByCategoryActivity;
 import fithou.duogwas.goldie.Adapter.CategoryAdapter;
 import fithou.duogwas.goldie.Adapter.ProductAdapter;
 import fithou.duogwas.goldie.R;
@@ -36,7 +35,7 @@ import fithou.duogwas.goldie.Response.TokenDto;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.CategoryService;
 import fithou.duogwas.goldie.Retrofit.ProductService;
-import fithou.duogwas.goldie.Utils.ObjectSharedPreferences;
+import fithou.duogwas.goldie.Utils.UserManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,7 +91,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     }
 
     private void LoadUserInfor() {
-        user = ObjectSharedPreferences.getSavedObjectFromPreference(getContext(), "User", "MODE_PRIVATE", TokenDto.class);
+        user = UserManager.getSavedUser(getContext(), "User", "MODE_PRIVATE", TokenDto.class);
         tvHiName.setText("Xin chào,\n" + user.getUser().getFullname());
     }
 

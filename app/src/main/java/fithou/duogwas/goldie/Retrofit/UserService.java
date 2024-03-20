@@ -6,9 +6,11 @@ package fithou.duogwas.goldie.Retrofit;
 
 import fithou.duogwas.goldie.Request.LoginDto;
 import fithou.duogwas.goldie.Entity.User;
+import fithou.duogwas.goldie.Request.PasswordDto;
 import fithou.duogwas.goldie.Response.TokenDto;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -25,4 +27,8 @@ public interface UserService {
 
     @POST("forgot-password")
     Call<String> ForgotPassword(@Query("email") String email);
+
+    @POST("user/change-password")
+    Call<String> changePassword(@Header("Authorization") String authToken,
+                                @Body PasswordDto passwordDto);
 }
