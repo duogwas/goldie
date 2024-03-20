@@ -256,49 +256,53 @@
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/cbPrimary"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginEnd="32dp"
                     android:text="Đặt làm địa chỉ mặc định"
                     app:layout_constraintStart_toStartOf="@+id/tvWard"
                     app:layout_constraintTop_toBottomOf="@+id/spnWard" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnDelete"
-                    android:layout_width="match_parent"
+                    android:layout_width="350dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/change_cart_background"
                     android:backgroundTint="#ff4627"
                     android:text="Xóa"
-                    android:visibility="visible"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@+id/spnWard"
+                    app:layout_constraintStart_toStartOf="@+id/spnWard"
                     app:layout_constraintTop_toBottomOf="@+id/cbPrimary" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnUpdate"
-                    android:layout_width="match_parent"
+                    android:layout_width="350dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/change_cart_background"
                     android:backgroundTint="#4cc1ff"
                     android:text="Cập nhật"
-                    android:visibility="visible"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@+id/spnWard"
+                    app:layout_constraintStart_toStartOf="@+id/spnWard"
                     app:layout_constraintTop_toBottomOf="@+id/btnDelete" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnCreate"
-                    android:layout_width="match_parent"
+                    android:layout_width="350dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="42dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="16dp"
                     android:background="@drawable/change_cart_background"
                     android:backgroundTint="#A5D6A7"
@@ -307,8 +311,8 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/spnWard"
+                    app:layout_constraintStart_toStartOf="@+id/spnWard"
                     app:layout_constraintTop_toBottomOf="@+id/cbPrimary" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

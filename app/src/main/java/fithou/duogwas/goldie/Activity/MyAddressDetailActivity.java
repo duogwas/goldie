@@ -374,9 +374,9 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
                 if (response.isSuccessful()) {
                     UserAdressResponse result = response.body();
                     startActivity(new Intent(MyAddressDetailActivity.this, MyAddressActivity.class));
-                    ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.SUCCESS, "Tạo địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.SUCCESS, "Cập nhật địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 } else {
-                    ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.ERROR, "Tạo địa chỉ không thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.ERROR, "Cập nhật địa chỉ không thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 }
 
             }
@@ -398,7 +398,7 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    startActivity(new Intent(MyAddressDetailActivity.this,MyAddressActivity.class));
+                    startActivity(new Intent(MyAddressDetailActivity.this, MyAddressActivity.class));
                     ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.SUCCESS, "Xóa địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 } else {
                     ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.INFORMATION, "Xóa địa chỉ ko thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
