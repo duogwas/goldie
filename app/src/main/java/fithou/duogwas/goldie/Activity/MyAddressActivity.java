@@ -4,8 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -26,8 +32,10 @@ import fithou.duogwas.goldie.Utils.UserManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.thanguit.toastperfect.ToastPerfect;
 
 public class MyAddressActivity extends AppCompatActivity implements View.OnClickListener {
+    Long idAddr;
     FloatingActionButton btnCreateAddress;
     RecyclerView rcvMyAddress;
     ImageView ivBack;
@@ -56,8 +64,6 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
     private void getMyAddress() {
         TokenDto user = UserManager.getSavedUser(MyAddressActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
         String token = user.getToken();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MyAddressActivity.this, LinearLayoutManager.VERTICAL, false);
-        rcvMyAddress.setLayoutManager(linearLayoutManager);
         UserAddressService userAddressService = ApiUtils.getUserAddressAPIService();
         Call<List<UserAdressResponse>> call = userAddressService.getListAddress("Bearer " + token, 0, 10);
         call.enqueue(new Callback<List<UserAdressResponse>>() {
@@ -65,12 +71,13 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
             public void onResponse(Call<List<UserAdressResponse>> call, Response<List<UserAdressResponse>> response) {
                 if (response.isSuccessful()) {
                     List<UserAdressResponse> userAdressResponses = response.body();
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MyAddressActivity.this, LinearLayoutManager.VERTICAL, false);
+                    rcvMyAddress.setLayoutManager(linearLayoutManager);
                     UserAddressAdapter userAddressAdapter = new UserAddressAdapter(userAdressResponses, MyAddressActivity.this);
                     rcvMyAddress.setAdapter(userAddressAdapter);
                 } else {
                     Toast.makeText(MyAddressActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 }
-
             }
 
             @Override
@@ -88,6 +95,7 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
                 break;
 
             case R.id.btnCreateAddress:
+                startActivity(new Intent(MyAddressActivity.this,MyAddressDetailActivity.class));
                 break;
 
             default:

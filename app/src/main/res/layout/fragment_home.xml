@@ -77,7 +77,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
-                android:background="@drawable/custom_edt_search"
+                android:background="@drawable/edt_search"
                 android:iconifiedByDefault="false"
                 android:queryBackground="@null"
                 android:queryHint="Tìm kiếm..."

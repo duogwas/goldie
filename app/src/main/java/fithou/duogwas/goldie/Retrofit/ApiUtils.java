@@ -27,4 +27,8 @@ public class ApiUtils {
     public static UserAddressService getUserAddressAPIService() {
         return RetrofitClient.getClient(BASE_URL).create(UserAddressService.class);
     }
+
+    public static AddressService getAddressAPIService() {
+        return RetrofitClient.getClient(BASE_URL).create(AddressService.class);
+    }
 }

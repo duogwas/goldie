@@ -11,6 +11,10 @@ public class Wards {
 
     private Districts districts;
 
+    public Wards(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

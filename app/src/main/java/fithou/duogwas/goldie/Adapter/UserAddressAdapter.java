@@ -5,6 +5,7 @@ package fithou.duogwas.goldie.Adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 
+import fithou.duogwas.goldie.Activity.MyAddressDetailActivity;
+import fithou.duogwas.goldie.Activity.ProductDetailActivity;
+import fithou.duogwas.goldie.Activity.SignInActivity;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.UserAdressResponse;
 
@@ -48,9 +52,21 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
                 + ", " + response.getWards().getDistricts().getName()
                 + ", " + response.getWards().getDistricts().getProvince().getName());
 
-        if(response.getPrimaryAddres()){
+        if (response.getPrimaryAddres()) {
             holder.clDefaultAddress.setVisibility(View.VISIBLE);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, MyAddressDetailActivity.class);
+                intent.putExtra("idAddress", response.getId());
+                intent.putExtra("idProvince", response.getWards().getDistricts().getProvince().getId());
+                intent.putExtra("idDistrict", response.getWards().getDistricts().getId());
+                intent.putExtra("idWards", response.getWards().getId());
+                context.startActivity(intent);
+            }
+        });
 
     }
 
@@ -62,7 +78,6 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvPhone, tvAddress;
         ConstraintLayout clDefaultAddress;
-        ImageView ivEdit, ivDelate;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,8 +85,6 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
             tvPhone = itemView.findViewById(R.id.tvPhone);
             tvAddress = itemView.findViewById(R.id.tvAddress);
             clDefaultAddress = itemView.findViewById(R.id.clDefaultAddress);
-            ivEdit = itemView.findViewById(R.id.ivEdit);
-            ivDelate = itemView.findViewById(R.id.ivDelete);
         }
     }
 }

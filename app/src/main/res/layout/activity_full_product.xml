@@ -55,7 +55,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/custom_edt_search"
+        android:background="@drawable/edt_search"
         android:iconifiedByDefault="false"
         android:queryBackground="@null"
         android:queryHint="Tìm kiếm..."
