@@ -1,5 +1,6 @@
 package fithou.duogwas.goldie.Fragment;
 
+import android.content.Intent;
 import android.opengl.Visibility;
 import android.os.Bundle;
 
@@ -8,18 +9,22 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+import fithou.duogwas.goldie.Activity.CheckOutActivity;
 import fithou.duogwas.goldie.Adapter.CartAdapter;
 import fithou.duogwas.goldie.Entity.ProductCart;
 import fithou.duogwas.goldie.R;
@@ -27,13 +32,13 @@ import fithou.duogwas.goldie.Utils.CartManager;
 
 
 public class CartFragment extends Fragment {
-
     Double totalInit = 0.0;
-    ConstraintLayout clCartIsEmpty, clBtnCart;
+    ConstraintLayout clCartIsEmpty, clBtnCart, clCart;
     RecyclerView recyclerView;
     CartAdapter cartAdapter;
     TextView tvTotalPrice;
     AppCompatButton btnCheckout;
+    FrameLayout FrameLayout;
 
     public CartFragment() {
         // Required empty public constructor
@@ -51,13 +56,22 @@ public class CartFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initView();
         loadAllCart();
+
+        btnCheckout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), CheckOutActivity.class));
+            }
+        });
     }
 
     private void initView() {
         clCartIsEmpty = getView().findViewById(R.id.clCartIsEmpty);
-        clBtnCart=getView().findViewById(R.id.clBtnCart);
+        clBtnCart = getView().findViewById(R.id.clBtnCart);
         tvTotalPrice = getView().findViewById(R.id.tvTotalPrice);
         btnCheckout = getView().findViewById(R.id.btnCheckout);
+        FrameLayout = getView().findViewById(R.id.FrameLayout);
+        clCart = getView().findViewById(R.id.clCart);
     }
 
     private void loadAllCart() {

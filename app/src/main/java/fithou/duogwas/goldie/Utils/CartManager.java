@@ -49,5 +49,12 @@ public class CartManager {
         }.getType();
         return gson.fromJson(json, type);
     }
+
+    public static void clearCart(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(CART_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear(); // Xóa toàn bộ dữ liệu trong SharedPreferences của giỏ hàng
+        editor.apply();
+    }
 }
 
