@@ -4,11 +4,9 @@ package fithou.duogwas.goldie.Response;
 //
 
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
 
 import fithou.duogwas.goldie.Entity.InvoiceStatus;
 import fithou.duogwas.goldie.Entity.PayType;

@@ -36,4 +36,8 @@ public class ApiUtils {
     public static InvoiceService getInvoiceAPIService() {
         return RetrofitClient.getClient(BASE_URL).create(InvoiceService.class);
     }
+
+    public static VoucherService getVoucherAPIService() {
+        return RetrofitClient.getClient(BASE_URL).create(VoucherService.class);
+    }
 }

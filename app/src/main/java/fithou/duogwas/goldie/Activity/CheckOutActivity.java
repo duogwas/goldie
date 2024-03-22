@@ -16,6 +16,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +27,19 @@ import fithou.duogwas.goldie.Adapter.CartAdapter;
 import fithou.duogwas.goldie.Adapter.UserAddressAdapter;
 import fithou.duogwas.goldie.Entity.PayType;
 import fithou.duogwas.goldie.Entity.ProductCart;
+import fithou.duogwas.goldie.Entity.Voucher;
 import fithou.duogwas.goldie.Fragment.HomeFragment;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Request.InvoiceRequest;
 import fithou.duogwas.goldie.Request.ProductSizeRequest;
+import fithou.duogwas.goldie.Response.ErrorResponse;
 import fithou.duogwas.goldie.Response.InvoiceResponse;
 import fithou.duogwas.goldie.Response.TokenDto;
 import fithou.duogwas.goldie.Response.UserAdressResponse;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.InvoiceService;
 import fithou.duogwas.goldie.Retrofit.UserAddressService;
+import fithou.duogwas.goldie.Retrofit.VoucherService;
 import fithou.duogwas.goldie.Utils.CartManager;
 import fithou.duogwas.goldie.Utils.UserManager;
 import retrofit2.Call;
@@ -44,14 +49,17 @@ import vn.thanguit.toastperfect.ToastPerfect;
 
 public class CheckOutActivity extends AppCompatActivity implements View.OnClickListener {
     UserAdressResponse addressDefault = null;
+    String voucher = "";
+    Double discount = 0.0;
     Double shipPrice = 20000.0;
     Double totalInit = 0.0;
-    ConstraintLayout placeOrderSuccess, placeOrder;
+    ConstraintLayout placeOrderSuccess, placeOrder, clVoucherDiscount;
     TextView tvUserName, tvPhoneNumber, tvAddress;
-    TextView tvTotalProductPrice, tvTotalShipPrice, tvTotalPrice;
+    TextView tvTotalProductPrice, tvTotalShipPrice, tvTotalPrice, tvTotalVoucherDiscount;
     TextView tvPayOnDelivery, tvPayWithMomo;
-    EditText edtNote;
-    AppCompatButton btnOrder, btnContinueShopping;
+    TextView tvErrVoucher;
+    EditText edtNote, edtVoucher;
+    AppCompatButton btnOrder, btnContinueShopping, btnVoucher;
     RadioButton rbPayOnDelivery, rbPayWithMomo;
     RecyclerView rcvProductCart;
     CartAdapter cartAdapter;
@@ -85,6 +93,11 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
         tvPayOnDelivery = findViewById(R.id.tvPayOnDelivery);
         tvPayWithMomo = findViewById(R.id.tvPayWithMomo);
         edtNote = findViewById(R.id.edtNote);
+        clVoucherDiscount = findViewById(R.id.clVoucherDiscount);
+        tvTotalVoucherDiscount = findViewById(R.id.tvTotalVoucherDiscount);
+        edtVoucher = findViewById(R.id.edtVoucher);
+        tvErrVoucher = findViewById(R.id.tvErrVoucher);
+        btnVoucher = findViewById(R.id.btnVoucher);
     }
 
     private void setOnClick() {
@@ -92,6 +105,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
         tvPayOnDelivery.setOnClickListener(this);
         tvPayWithMomo.setOnClickListener(this);
         btnContinueShopping.setOnClickListener(this);
+        btnVoucher.setOnClickListener(this);
     }
 
     private String formatPrice(Double totalPrice) {
@@ -107,7 +121,8 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
             total += cartProduct.getQuantity() * cartProduct.getProduct().getPrice();
         }
         tvTotalProductPrice.setText(formatPrice(total));
-        tvTotalPrice.setText(formatPrice(total + shipPrice));
+        tvTotalPrice.setText(formatPrice(total + shipPrice - discount));
+        totalInit = total;
     }
 
     private void loadProductCart() {
@@ -163,11 +178,55 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
+    private void checkVoucher() {
+        if (edtVoucher.getText().toString().trim().isEmpty()) {
+            tvErrVoucher.setVisibility(View.VISIBLE);
+            tvErrVoucher.setText("Bạn chưa nhập Voucher");
+            edtVoucher.requestFocus();
+        } else {
+            voucher = edtVoucher.getText().toString();
+            double amount = totalInit;
+            VoucherService voucherService = ApiUtils.getVoucherAPIService();
+            Call<Voucher> call = voucherService.checkVoucher(voucher, amount);
+            call.enqueue(new Callback<Voucher>() {
+                @Override
+                public void onResponse(Call<Voucher> call, Response<Voucher> response) {
+                    if (response.isSuccessful()) {
+                        Voucher voucherResponse = response.body();
+                        tvErrVoucher.setVisibility(View.GONE);
+                        clVoucherDiscount.setVisibility(View.VISIBLE);
+                        discount = voucherResponse.getDiscount();
+                        tvTotalVoucherDiscount.setText("-" + formatPrice(discount));
+                        tvTotalPrice.setText(formatPrice(totalInit + shipPrice - discount));
+                    } else {
+                        ErrorResponse errorResponse = null;
+                        try {
+                            errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (errorResponse != null) {
+                            String defaultMessage = errorResponse.getDefaultMessage();
+                            tvErrVoucher.setVisibility(View.VISIBLE);
+                            tvErrVoucher.setText(defaultMessage);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Voucher> call, Throwable t) {
+
+                }
+            });
+        }
+
+
+    }
+
     private void createOrderCod() {
         InvoiceRequest invoiceRequest;
         PayType payType = PayType.PAYMENT_DELIVERY;
         Long userAddressId = addressDefault.getId();
-        String voucherCode = "";
         String note = edtNote.getText().toString();
         List<ProductSizeRequest> listSize = new ArrayList<>();
         List<ProductCart> productCartList = CartManager.getCart(CheckOutActivity.this);
@@ -177,11 +236,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
             listSize.add(new ProductSizeRequest(idSize, quantity));
         }
 
-        if (edtNote.getText().toString().trim().isEmpty()) {
-            note = "";
-        }
-
-        invoiceRequest = new InvoiceRequest(payType, userAddressId, voucherCode, note, listSize);
+        invoiceRequest = new InvoiceRequest(payType, userAddressId, voucher, note, listSize);
         TokenDto user = UserManager.getSavedUser(CheckOutActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
         String token = user.getToken();
         InvoiceService invoiceService = ApiUtils.getInvoiceAPIService();
@@ -216,6 +271,10 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
 
             case R.id.tvPayWithMomo:
                 rbPayWithMomo.setChecked(true);
+                break;
+
+            case R.id.btnVoucher:
+                checkVoucher();
                 break;
 
             case R.id.btnContinueShopping:
