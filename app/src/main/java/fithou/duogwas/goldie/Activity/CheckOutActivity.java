@@ -29,6 +29,8 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import fithou.duogwas.goldie.Adapter.CartAdapter;
 import fithou.duogwas.goldie.Entity.PayType;
@@ -82,8 +84,6 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
     RadioButton rbPayOnDelivery, rbPayWithMomo;
     RecyclerView rcvProductCart;
     CartAdapter cartAdapter;
-
-    private static final int REQUEST_CODE_MOMO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,6 +206,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
             tvErrVoucher.setText("Bạn chưa nhập Voucher");
             edtVoucher.requestFocus();
         } else {
+            voucher = edtVoucher.getText().toString();
             double amount = totalInit;
             VoucherService voucherService = ApiUtils.getVoucherAPIService();
             Call<Voucher> call = voucherService.checkVoucher(voucher, amount);
@@ -221,6 +222,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
                         tvTotalVoucherDiscount.setText("-" + formatPrice(discount));
                         tvTotalPrice.setText(formatPrice(totalInit + shipPrice - discount));
                     } else {
+                        voucher=null;
                         ErrorResponse errorResponse = null;
                         try {
                             errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
@@ -229,8 +231,21 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
                         }
                         if (errorResponse != null) {
                             String defaultMessage = errorResponse.getDefaultMessage();
-                            tvErrVoucher.setVisibility(View.VISIBLE);
-                            tvErrVoucher.setText(defaultMessage);
+                            if (defaultMessage.contains("Số tiền đơn hàng chưa đủ")) {
+                                Pattern pattern = Pattern.compile("(\\d+\\.\\d+)");
+                                Matcher matcher = pattern.matcher(defaultMessage);
+                                if (matcher.find()) {
+                                    double number = Double.parseDouble(matcher.group(1));
+                                    Log.d("Number", "Số được tách ra từ chuỗi là: " + number);
+                                    tvErrVoucher.setVisibility(View.VISIBLE);
+                                    tvErrVoucher.setText("Số tiền đơn hàng chưa đủ, hãy mua thêm "
+                                            + formatPrice(number)
+                                            + " để được áp dụng voucher");
+                                }
+                            } else {
+                                tvErrVoucher.setVisibility(View.VISIBLE);
+                                tvErrVoucher.setText(defaultMessage);
+                            }
                         }
                     }
                 }
