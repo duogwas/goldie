@@ -1,20 +1,27 @@
 package fithou.duogwas.goldie.Activity;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -24,20 +31,21 @@ import java.util.List;
 import java.util.Locale;
 
 import fithou.duogwas.goldie.Adapter.CartAdapter;
-import fithou.duogwas.goldie.Adapter.UserAddressAdapter;
 import fithou.duogwas.goldie.Entity.PayType;
 import fithou.duogwas.goldie.Entity.ProductCart;
 import fithou.duogwas.goldie.Entity.Voucher;
-import fithou.duogwas.goldie.Fragment.HomeFragment;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Request.InvoiceRequest;
+import fithou.duogwas.goldie.Request.PaymentDto;
 import fithou.duogwas.goldie.Request.ProductSizeRequest;
 import fithou.duogwas.goldie.Response.ErrorResponse;
 import fithou.duogwas.goldie.Response.InvoiceResponse;
+import fithou.duogwas.goldie.Response.ResponsePayment;
 import fithou.duogwas.goldie.Response.TokenDto;
 import fithou.duogwas.goldie.Response.UserAdressResponse;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.InvoiceService;
+import fithou.duogwas.goldie.Retrofit.MoMoService;
 import fithou.duogwas.goldie.Retrofit.UserAddressService;
 import fithou.duogwas.goldie.Retrofit.VoucherService;
 import fithou.duogwas.goldie.Utils.CartManager;
@@ -48,11 +56,22 @@ import retrofit2.Response;
 import vn.thanguit.toastperfect.ToastPerfect;
 
 public class CheckOutActivity extends AppCompatActivity implements View.OnClickListener {
+    private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    createOrderMomo();
+                }
+            }
+    );
+    String requestIdMomo = null;
+    String orderIdMomo = null;
     UserAdressResponse addressDefault = null;
-    String voucher = "";
+    String voucher = null;
     Double discount = 0.0;
     Double shipPrice = 20000.0;
     Double totalInit = 0.0;
+    LinearLayout progressBar;
     ConstraintLayout placeOrderSuccess, placeOrder, clVoucherDiscount;
     TextView tvUserName, tvPhoneNumber, tvAddress;
     TextView tvTotalProductPrice, tvTotalShipPrice, tvTotalPrice, tvTotalVoucherDiscount;
@@ -63,6 +82,8 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
     RadioButton rbPayOnDelivery, rbPayWithMomo;
     RecyclerView rcvProductCart;
     CartAdapter cartAdapter;
+
+    private static final int REQUEST_CODE_MOMO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +97,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initView() {
+        progressBar = findViewById(R.id.progressBar);
         placeOrderSuccess = findViewById(R.id.placeOrderSuccess);
         placeOrder = findViewById(R.id.placeOrder);
         tvUserName = findViewById(R.id.tvUserName);
@@ -184,7 +206,6 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
             tvErrVoucher.setText("Bạn chưa nhập Voucher");
             edtVoucher.requestFocus();
         } else {
-            voucher = edtVoucher.getText().toString();
             double amount = totalInit;
             VoucherService voucherService = ApiUtils.getVoucherAPIService();
             Call<Voucher> call = voucherService.checkVoucher(voucher, amount);
@@ -193,6 +214,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
                 public void onResponse(Call<Voucher> call, Response<Voucher> response) {
                     if (response.isSuccessful()) {
                         Voucher voucherResponse = response.body();
+                        voucher = voucherResponse.getCode();
                         tvErrVoucher.setVisibility(View.GONE);
                         clVoucherDiscount.setVisibility(View.VISIBLE);
                         discount = voucherResponse.getDiscount();
@@ -219,8 +241,6 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
                 }
             });
         }
-
-
     }
 
     private void createOrderCod() {
@@ -259,7 +279,97 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
                 Log.e("checkout", t.getMessage());
             }
         });
+    }
 
+    private void requestPaymentMomo() {
+        String content = "Thanh toán đơn hàng GOLDIE";
+        String returnurl = "http://fithougoldie.com";
+
+        List<ProductSizeRequest> listSize = new ArrayList<>();
+        List<ProductCart> productCartList = CartManager.getCart(CheckOutActivity.this);
+        for (ProductCart cartProduct : productCartList) {
+            Long idSize = cartProduct.getSize().getId();
+            int quantity = cartProduct.getQuantity();
+            listSize.add(new ProductSizeRequest(idSize, quantity));
+        }
+
+        PaymentDto paymentDto = new PaymentDto(voucher, content, returnurl, returnurl, listSize);
+
+        TokenDto user = UserManager.getSavedUser(CheckOutActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
+        String token = user.getToken();
+        MoMoService momoService = ApiUtils.getMomoAPIService();
+        Call<ResponsePayment> call = momoService.requestPaymentMomo("Bearer " + token, paymentDto);
+        call.enqueue(new Callback<ResponsePayment>() {
+            @Override
+            public void onResponse(Call<ResponsePayment> call, Response<ResponsePayment> response) {
+                if (response.isSuccessful()) {
+                    String url = response.body().getUrl();
+                    requestIdMomo = response.body().getRequestId();
+                    orderIdMomo = response.body().getOrderId();
+                    Intent intent = new Intent(CheckOutActivity.this, MoMoActivity.class);
+                    intent.putExtra("urlWeb", url);
+//                    startActivity(intent);
+//                    Intent i = new Intent(Intent.ACTION_VIEW);
+//                    i.setData(Uri.parse(url));
+//                    startActivity(i);
+                    activityResultLauncher.launch(intent);
+                    Log.e("checkoutmomo", "success");
+                } else {
+                    Log.e("checkoutmomo", "fail");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponsePayment> call, Throwable t) {
+                Log.e("checkoutmomo", t.getMessage());
+            }
+        });
+    }
+
+    private void createOrderMomo() {
+        progressBar.setVisibility(View.VISIBLE);
+        placeOrder.setVisibility(View.GONE);
+
+        InvoiceRequest invoiceRequest;
+        PayType payType = PayType.PAYMENT_MOMO;
+        Long userAddressId = addressDefault.getId();
+        String note = edtNote.getText().toString();
+        List<ProductSizeRequest> listSize = new ArrayList<>();
+        List<ProductCart> productCartList = CartManager.getCart(CheckOutActivity.this);
+        for (ProductCart cartProduct : productCartList) {
+            Long idSize = cartProduct.getSize().getId();
+            int quantity = cartProduct.getQuantity();
+            listSize.add(new ProductSizeRequest(idSize, quantity));
+        }
+        invoiceRequest = new InvoiceRequest(payType, requestIdMomo, orderIdMomo, userAddressId, voucher, note, listSize);
+
+        TokenDto user = UserManager.getSavedUser(CheckOutActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
+        String token = user.getToken();
+        InvoiceService invoiceService = ApiUtils.getInvoiceAPIService();
+        Call<InvoiceResponse> call = invoiceService.creatInvoice("Bearer " + token, invoiceRequest);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                call.enqueue(new Callback<InvoiceResponse>() {
+                    @Override
+                    public void onResponse(Call<InvoiceResponse> call, Response<InvoiceResponse> response) {
+                        if (response.isSuccessful()) {
+                            progressBar.setVisibility(View.GONE);
+                            placeOrderSuccess.setVisibility(View.VISIBLE);
+                            CartManager.clearCart(CheckOutActivity.this); // Xóa dữ liệu trong giỏ hàng
+                            ToastPerfect.makeText(CheckOutActivity.this, ToastPerfect.SUCCESS, "Đặt hàng thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                        } else {
+                            ToastPerfect.makeText(CheckOutActivity.this, ToastPerfect.ERROR, "Đặt hàng không thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<InvoiceResponse> call, Throwable t) {
+                        Log.e("checkout", t.getMessage());
+                    }
+                });
+            }
+        }, 500);
     }
 
     @Override
@@ -283,14 +393,12 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
 
             case R.id.btnOrder:
                 if (!rbPayOnDelivery.isChecked() && !rbPayWithMomo.isChecked()) {
-                    // Cả hai RadioButton đều không được chọn
                     ToastPerfect.makeText(this, ToastPerfect.ERROR, "Bạn chưa chọn phương thức thanh toán", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 } else if (rbPayOnDelivery.isChecked()) {
                     createOrderCod();
                 } else {
-                    ToastPerfect.makeText(this, ToastPerfect.INFORMATION, "Phương thức thanh toán Momo đang được phát triển", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    requestPaymentMomo();
                 }
-
                 break;
 
             default:

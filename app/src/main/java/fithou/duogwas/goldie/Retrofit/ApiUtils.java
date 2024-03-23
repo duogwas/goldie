@@ -40,4 +40,8 @@ public class ApiUtils {
     public static VoucherService getVoucherAPIService() {
         return RetrofitClient.getClient(BASE_URL).create(VoucherService.class);
     }
+
+    public static MoMoService getMomoAPIService() {
+        return RetrofitClient.getClient(BASE_URL).create(MoMoService.class);
+    }
 }
