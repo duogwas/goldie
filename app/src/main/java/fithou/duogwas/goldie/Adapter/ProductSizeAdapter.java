@@ -73,7 +73,7 @@ public class ProductSizeAdapter extends RecyclerView.Adapter<ProductSizeAdapter.
             holder.tvSizeName.setTextColor(Color.BLACK);
         }
 
-        if (size.getQuantity()==0) {
+        if (size.getQuantity() == 0) {
             holder.tvSizeName.setBackgroundResource(R.drawable.bg_size_sold_out);
             holder.tvSizeName.setTextColor(Color.WHITE);
             holder.tvSizeName.setEnabled(false);
@@ -84,15 +84,19 @@ public class ProductSizeAdapter extends RecyclerView.Adapter<ProductSizeAdapter.
             public void onClick(View view) {
                 selectedItemPosition = position;
                 notifyDataSetChanged();
-                if(size.getQuantity()==0){
+                if (size.getQuantity() == 0) {
                     tvSizeName.setText("");
-                }
-                else {
+                } else {
                     tvSizeName.setText(size.getSizeName());
                 }
                 Long idSize = size.getId();
                 if (onSizeClickListener != null) {
-                    onSizeClickListener.onSizeClick(idSize);
+                    if (size.getQuantity() == 0) {
+                        idSize = null;
+                        onSizeClickListener.onSizeClick(idSize);
+                    } else {
+                        onSizeClickListener.onSizeClick(idSize);
+                    }
                 }
             }
         });
