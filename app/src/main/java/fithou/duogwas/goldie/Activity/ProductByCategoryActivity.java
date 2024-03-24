@@ -170,6 +170,7 @@ public class ProductByCategoryActivity extends AppCompatActivity implements View
                 showDialog();
                 break;
             case R.id.ivBack:
+                startActivity(new Intent(ProductByCategoryActivity.this,MainActivity.class));
                 finish();
                 break;
             default:

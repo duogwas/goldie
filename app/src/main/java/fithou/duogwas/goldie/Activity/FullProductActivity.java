@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -305,6 +306,7 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
                 showDialogSort();
                 break;
             case R.id.ivBack:
+                startActivity(new Intent(FullProductActivity.this,MainActivity.class));
                 finish();
                 break;
             default:

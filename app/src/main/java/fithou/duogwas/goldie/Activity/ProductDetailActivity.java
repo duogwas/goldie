@@ -246,6 +246,7 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ivBack:
+                startActivity(new Intent(ProductDetailActivity.this,MainActivity.class));
                 finish();
                 break;
 

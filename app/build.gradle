@@ -70,4 +70,7 @@ dependencies {
 
     //lottie animation
     implementation 'com.airbnb.android:lottie:6.4.0'
+
+    //notijication bottom nav
+    implementation 'com.aurelhubert:ahbottomnavigation:2.3.4'
 }
