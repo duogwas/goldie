@@ -27,7 +27,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MyAddressActivity extends AppCompatActivity implements View.OnClickListener {
-    Long idAddr;
     FloatingActionButton btnCreateAddress;
     RecyclerView rcvMyAddress;
     ImageView ivBack;

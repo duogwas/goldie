@@ -44,7 +44,7 @@
             android:name=".Activity.MyAddressActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.FullProduct"
+            android:name=".Activity.FullProductActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.ProductByCategoryActivity"

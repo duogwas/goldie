@@ -44,7 +44,7 @@ public class ProductByCategoryActivity extends AppCompatActivity implements View
     SearchView searchView;
     AppCompatButton btnFilter;
     ImageButton btnSort;
-    ImageView imgBack;
+    ImageView ivBack;
 
 
     @Override
@@ -64,7 +64,7 @@ public class ProductByCategoryActivity extends AppCompatActivity implements View
         btnFilter = findViewById(R.id.btnFilter);
         btnSort = findViewById(R.id.btnSort);
         rcvProduct = findViewById(R.id.rcvProduct);
-        imgBack = findViewById(R.id.imgBack);
+        ivBack = findViewById(R.id.ivBack);
     }
 
     private void getData() {
@@ -78,7 +78,7 @@ public class ProductByCategoryActivity extends AppCompatActivity implements View
     private void setOnClick() {
         btnSort.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
-        imgBack.setOnClickListener(this);
+        ivBack.setOnClickListener(this);
     }
 
 
@@ -169,7 +169,7 @@ public class ProductByCategoryActivity extends AppCompatActivity implements View
             case R.id.btnSort:
                 showDialog();
                 break;
-            case R.id.imgBack:
+            case R.id.ivBack:
                 finish();
                 break;
             default:

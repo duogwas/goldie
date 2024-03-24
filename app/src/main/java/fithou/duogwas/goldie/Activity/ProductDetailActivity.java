@@ -46,6 +46,7 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
     Long idProduct, idColorCart, idSizeCart;
     Double priceProduct;
     SliderView imageSlider;
+    ImageView ivBack;
     TextView tvName, tvCodeAndSold, tvPrice, tvDescription, tvColorName, tvSizeName, tvQuantity, tvTotalPrice, tvAddToCart;
     RecyclerView rcvColor, rcvSize;
     ProductImageSliderAdapter adapterImage;
@@ -67,6 +68,7 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void initView() {
+        ivBack = findViewById(R.id.ivBack);
         imageSlider = findViewById(R.id.imageSlider);
         tvName = findViewById(R.id.tvName);
         tvCodeAndSold = findViewById(R.id.tvCodeAndSold);
@@ -101,6 +103,7 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         ivPlus.setOnClickListener(this);
         tvAddToCart.setOnClickListener(this);
         clDescription.setOnClickListener(this);
+        ivBack.setOnClickListener(this);
     }
 
     private void LoadProductDetail() {
@@ -184,9 +187,9 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         int quantity;
         quantity = parseInt(tvQuantity.getText().toString());
 
-        if(idColorCart==null){
+        if (idColorCart == null) {
             ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.ERROR, "Vui lòng chọn màu sắc sản phẩm", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
-        } else if (idSizeCart==null) {
+        } else if (idSizeCart == null) {
             ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.ERROR, "Vui lòng chọn kích thước sản phẩm", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
         }
 
@@ -242,6 +245,10 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.ivBack:
+                finish();
+                break;
+
             case R.id.ivMinus:
                 int number1 = parseInt(tvQuantity.getText().toString()) - 1;
                 if (number1 >= 1) {

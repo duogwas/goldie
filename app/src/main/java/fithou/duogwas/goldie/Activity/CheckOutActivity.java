@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -75,6 +76,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
     Double totalInit = 0.0;
     LinearLayout progressBar;
     ConstraintLayout placeOrderSuccess, placeOrder, clVoucherDiscount;
+    ImageView ivBack;
     TextView tvUserName, tvPhoneNumber, tvAddress;
     TextView tvTotalProductPrice, tvTotalShipPrice, tvTotalPrice, tvTotalVoucherDiscount;
     TextView tvPayOnDelivery, tvPayWithMomo;
@@ -97,6 +99,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initView() {
+        ivBack = findViewById(R.id.ivBack);
         progressBar = findViewById(R.id.progressBar);
         placeOrderSuccess = findViewById(R.id.placeOrderSuccess);
         placeOrder = findViewById(R.id.placeOrder);
@@ -128,6 +131,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
         tvPayWithMomo.setOnClickListener(this);
         btnContinueShopping.setOnClickListener(this);
         btnVoucher.setOnClickListener(this);
+        ivBack.setOnClickListener(this);
     }
 
     private String formatPrice(Double totalPrice) {
@@ -222,7 +226,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
                         tvTotalVoucherDiscount.setText("-" + formatPrice(discount));
                         tvTotalPrice.setText(formatPrice(totalInit + shipPrice - discount));
                     } else {
-                        voucher=null;
+                        voucher = null;
                         ErrorResponse errorResponse = null;
                         try {
                             errorResponse = new Gson().fromJson(response.errorBody().string(), ErrorResponse.class);
@@ -391,6 +395,10 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.ivBack:
+                finish();
+                break;
+
             case R.id.tvPayOnDelivery:
                 rbPayOnDelivery.setChecked(true);
                 break;

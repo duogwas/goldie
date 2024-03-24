@@ -24,7 +24,7 @@ import com.bdtopcoder.smart_slider.SliderItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import fithou.duogwas.goldie.Activity.FullProduct;
+import fithou.duogwas.goldie.Activity.FullProductActivity;
 import fithou.duogwas.goldie.Adapter.CategoryAdapter;
 import fithou.duogwas.goldie.Adapter.ProductAdapter;
 import fithou.duogwas.goldie.R;
@@ -175,7 +175,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tvSeeAllProduct:
-                Intent intent = new Intent(getContext(), FullProduct.class);
+                Intent intent = new Intent(getContext(), FullProductActivity.class);
                 startActivity(intent);
                 break;
 

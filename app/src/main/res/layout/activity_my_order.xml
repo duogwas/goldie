@@ -14,7 +14,7 @@
         android:scaleType="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_previous" />
+        app:srcCompat="@drawable/ic_back" />
 
     <TextView
         android:id="@+id/tvTittle"
