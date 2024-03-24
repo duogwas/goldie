@@ -4,14 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -20,10 +15,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import fithou.duogwas.goldie.Adapter.CategoryAdapter;
 import fithou.duogwas.goldie.Adapter.UserAddressAdapter;
 import fithou.duogwas.goldie.R;
-import fithou.duogwas.goldie.Response.CategoryResponse;
 import fithou.duogwas.goldie.Response.TokenDto;
 import fithou.duogwas.goldie.Response.UserAdressResponse;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
@@ -32,7 +25,6 @@ import fithou.duogwas.goldie.Utils.UserManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import vn.thanguit.toastperfect.ToastPerfect;
 
 public class MyAddressActivity extends AppCompatActivity implements View.OnClickListener {
     Long idAddr;
@@ -95,7 +87,7 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
                 break;
 
             case R.id.btnCreateAddress:
-                startActivity(new Intent(MyAddressActivity.this,MyAddressDetailActivity.class));
+                startActivity(new Intent(MyAddressActivity.this, AddressDetailActivity.class));
                 break;
 
             default:

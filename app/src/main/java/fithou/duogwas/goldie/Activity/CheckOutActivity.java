@@ -282,6 +282,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
                 if (response.isSuccessful()) {
                     placeOrder.setVisibility(View.GONE);
                     placeOrderSuccess.setVisibility(View.VISIBLE);
+
                     CartManager.clearCart(CheckOutActivity.this); // Xóa dữ liệu trong giỏ hàng
                     ToastPerfect.makeText(CheckOutActivity.this, ToastPerfect.SUCCESS, "Đặt hàng thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 } else {
