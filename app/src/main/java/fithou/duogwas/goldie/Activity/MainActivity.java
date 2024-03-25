@@ -1,20 +1,16 @@
 package fithou.duogwas.goldie.Activity;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.WindowManager;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.os.Bundle;
-import android.os.Handler;
-import android.util.TypedValue;
-import android.view.WindowManager;
-
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -43,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         replaceFragment(new HomeFragment());
         countItemInCart();
+
 
         binding.bottomNavigationView.setBackground(null);
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -76,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics()));
     }
 
-    private void countItemInCart() {
+    public void countItemInCart() {
         List<ProductCart> productCartList = CartManager.getCart(MainActivity.this);
         countItem = productCartList.size();
         if (countItem > 0) {
@@ -86,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             badgeDrawable.setNumber(countItem);
             badgeDrawable.setBadgeTextColor(getResources().getColor(R.color.white));
             badgeDrawable.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        }else {
+        } else {
             BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.menu_cart);
             badgeDrawable.setVisible(true);
             badgeDrawable.setVerticalOffset(dpToPx(MainActivity.this, 3));

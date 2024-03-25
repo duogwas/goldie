@@ -8,8 +8,8 @@ public class ApiUtils {
     private ApiUtils() {
     }
 
-    //    public static final String BASE_URL = "http://172.16.15.52:8080/api/"; //cty
-    public static final String BASE_URL = "http://192.168.1.61:8080/api/";  //home
+        public static final String BASE_URL = "http://172.16.15.72:8080/api/"; //cty
+//    public static final String BASE_URL = "http://192.168.1.61:8080/api/";  //home
 //    public static final String BASE_URL = "http://172.20.10.4:8080/api/";  //4g
 //    public static final String BASE_URL = "http://192.168.2.128:8080/api/";  //home2
 

@@ -9,6 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="bottomNavIcon">#FAFAFA</color>
 
+
+    <color name="redDelete">#f44336</color>
     <color name ="colorPrimary">#F44336</color>
     <color name ="colorPrimaryDark">#D32F2F</color>
     <color name ="colorAccent">#448AFF</color>
