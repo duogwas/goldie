@@ -2,65 +2,112 @@ package fithou.duogwas.goldie.Fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import fithou.duogwas.goldie.Activity.CheckOutActivity;
+import fithou.duogwas.goldie.Activity.MyAddressActivity;
+import fithou.duogwas.goldie.Adapter.MyOrderAdapter;
+import fithou.duogwas.goldie.Adapter.UserAddressAdapter;
 import fithou.duogwas.goldie.R;
+import fithou.duogwas.goldie.Response.InvoiceResponse;
+import fithou.duogwas.goldie.Response.TokenDto;
+import fithou.duogwas.goldie.Response.UserAdressResponse;
+import fithou.duogwas.goldie.Retrofit.ApiUtils;
+import fithou.duogwas.goldie.Retrofit.InvoiceService;
+import fithou.duogwas.goldie.Utils.UserManager;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import vn.thanguit.toastperfect.ToastPerfect;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ToPayOrderFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ToPayOrderFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    ConstraintLayout clNoOrder, clOrder;
+    RecyclerView rcvOrder;
+    Long idStt = Long.valueOf(1);
+    List<InvoiceResponse> listInvoiceToPay = new ArrayList<>();
 
     public ToPayOrderFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ToPayOrderFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ToPayOrderFragment newInstance(String param1, String param2) {
-        ToPayOrderFragment fragment = new ToPayOrderFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_to_pay_order, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initView();
+        getMyOrder(idStt);
+    }
+
+    private void initView() {
+        clOrder = getView().findViewById(R.id.clOrder);
+        clNoOrder = getView().findViewById(R.id.clNoOrder);
+        rcvOrder = getView().findViewById(R.id.rcvOrder);
+    }
+
+    private void getMyOrder(Long idStatus) {
+        TokenDto user = UserManager.getSavedUser(getContext(), "User", "MODE_PRIVATE", TokenDto.class);
+        String token = user.getToken();
+        InvoiceService invoiceService = ApiUtils.getInvoiceAPIService();
+        Call<List<InvoiceResponse>> call = invoiceService.getListInvoice("Bearer " + token);
+        call.enqueue(new Callback<List<InvoiceResponse>>() {
+            @Override
+            public void onResponse(Call<List<InvoiceResponse>> call, Response<List<InvoiceResponse>> response) {
+                if (response.isSuccessful()) {
+                    List<InvoiceResponse> invoiceResponses = response.body();
+                    if (invoiceResponses.size() == 0) {
+                        clOrder.setVisibility(View.GONE);
+                        clNoOrder.setVisibility(View.VISIBLE);
+                    } else {
+                        for (InvoiceResponse invoiceResponse : invoiceResponses) {
+                            if (invoiceResponse.getStatus().getId().equals(idStatus)) {
+                                listInvoiceToPay.add(invoiceResponse);
+                            }
+                            if (listInvoiceToPay.size() == 0) {
+                                clOrder.setVisibility(View.GONE);
+                                clNoOrder.setVisibility(View.VISIBLE);
+                            } else {
+                                Collections.sort(listInvoiceToPay, new Comparator<InvoiceResponse>() {
+                                    @Override
+                                    public int compare(InvoiceResponse o1, InvoiceResponse o2) {
+                                        return o2.getId().compareTo(o1.getId());
+                                    }
+                                });
+
+                                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                                rcvOrder.setLayoutManager(linearLayoutManager);
+                                MyOrderAdapter myOrderAdapter = new MyOrderAdapter(listInvoiceToPay, getContext());
+                                rcvOrder.setAdapter(myOrderAdapter);
+                            }
+                        }
+                    }
+                } else {
+                    ToastPerfect.makeText(getContext(), ToastPerfect.SUCCESS, "thất bại", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<InvoiceResponse>> call, Throwable t) {
+                Log.e("toPay", t.getMessage());
+            }
+        });
     }
 }

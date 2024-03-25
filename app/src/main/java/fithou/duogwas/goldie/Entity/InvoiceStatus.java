@@ -13,7 +13,7 @@ public class InvoiceStatus {
 
     private Date createdDate;
 
-    private Time createdTime;
+    private String createdTime;
 
     private Invoice invoice;
 

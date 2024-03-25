@@ -6,7 +6,9 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -15,7 +17,7 @@ import fithou.duogwas.goldie.Adapter.OrderPagerAdapter;
 import fithou.duogwas.goldie.R;
 
 public class MyOrderActivity extends AppCompatActivity {
-
+    ImageView ivBack;
     TabLayout tabOrder;
     ViewPager2 viewPager;
 
@@ -26,11 +28,18 @@ public class MyOrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_order);
         initView();
         setUpTabOrder();
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void initView() {
+        ivBack = findViewById(R.id.ivBack);
         tabOrder = findViewById(R.id.tabOrder);
-//        tabOrder.setSelectedTabIndicatorColor(Color.parseColor("#D32F2F"));
         viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(new OrderPagerAdapter(this));
     }

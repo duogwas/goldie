@@ -97,9 +97,13 @@ public class CartFragment extends Fragment {
                     int position = viewHolder.getAbsoluteAdapterPosition();
                     productCartList.remove(position);
                     CartManager.saveCart(getContext(), productCartList);
+                    cartAdapter.notifyDataSetChanged();
+                    if (productCartList.size() == 0) {
+                        clCartIsEmpty.setVisibility(View.VISIBLE);
+                        clBtnCart.setVisibility(View.GONE);
+                    }
                     updateTotalPrice();
                     refreshCountItemCart();
-                    cartAdapter.notifyDataSetChanged();
                 }
 
                 @Override

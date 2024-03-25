@@ -82,7 +82,6 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ivBack:
-                startActivity(new Intent(MyAddressActivity.this, MainActivity.class));
                 finish();
                 break;
 

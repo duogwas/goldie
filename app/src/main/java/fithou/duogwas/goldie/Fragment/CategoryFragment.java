@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import fithou.duogwas.goldie.Activity.MainActivity;
 import fithou.duogwas.goldie.Adapter.PrimaryCategoryAdapter;
 import fithou.duogwas.goldie.Adapter.SearchCategoryAdapter;
 import fithou.duogwas.goldie.R;
@@ -47,6 +48,7 @@ public class CategoryFragment extends Fragment {
         AnhXa();
         setSearchView();
         LoadPrimaryCategories();
+        refreshCountItemCart();
     }
 
     private void AnhXa() {
@@ -91,6 +93,13 @@ public class CategoryFragment extends Fragment {
             }
         });
 
+    }
+
+    private void refreshCountItemCart() {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            mainActivity.countItemInCart();
+        }
     }
 
     private void setSearchView() {

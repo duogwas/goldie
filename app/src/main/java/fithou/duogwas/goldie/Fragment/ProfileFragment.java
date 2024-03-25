@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import fithou.duogwas.goldie.Activity.MainActivity;
 import fithou.duogwas.goldie.Activity.MyAddressActivity;
 import fithou.duogwas.goldie.Activity.MyOrderActivity;
 import fithou.duogwas.goldie.Activity.SignInActivity;
@@ -61,6 +62,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         initView();
         setOnClick();
         loadUserInfor();
+        refreshCountItemCart();
     }
 
     private void initView() {
@@ -85,6 +87,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         tvFullName.setText(user.getUser().getFullname());
         tvEmail.setText(user.getUser().getEmail());
         tvPhone.setText(user.getUser().getPhone());
+    }
+
+    private void refreshCountItemCart() {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            mainActivity.countItemInCart();
+        }
     }
 
     private void showDialog() {
