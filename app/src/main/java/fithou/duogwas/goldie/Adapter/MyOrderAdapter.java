@@ -7,6 +7,7 @@ package fithou.duogwas.goldie.Adapter;
 import static fithou.duogwas.goldie.Entity.PayType.PAYMENT_MOMO;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import fithou.duogwas.goldie.Activity.OrderDetailActivity;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.InvoiceResponse;
 
@@ -61,7 +63,9 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         holder.btnOrderDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, String.valueOf(response.getId()), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context,OrderDetailActivity.class);
+                intent.putExtra("idInvoice",response.getId());
+                context.startActivity(intent);
             }
         });
     }
