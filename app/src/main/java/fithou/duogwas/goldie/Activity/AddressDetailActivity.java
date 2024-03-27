@@ -16,12 +16,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +27,6 @@ import fithou.duogwas.goldie.Adapter.DistrictsAdapter;
 import fithou.duogwas.goldie.Adapter.ProvinceAdapter;
 import fithou.duogwas.goldie.Adapter.WardsAdapter;
 import fithou.duogwas.goldie.Entity.Districts;
-import fithou.duogwas.goldie.Entity.ProductColor;
 import fithou.duogwas.goldie.Entity.Province;
 import fithou.duogwas.goldie.Entity.Wards;
 import fithou.duogwas.goldie.R;
@@ -46,7 +42,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vn.thanguit.toastperfect.ToastPerfect;
 
-public class MyAddressDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddressDetailActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView ivBack;
     TextView tvTittle, tvErrName, tvErrPhone, tvErrStreetName;
     EditText edtFullName, edtStreetName, edtPhone;
@@ -63,7 +59,7 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_my_address_detail);
+        setContentView(R.layout.activity_address_detail);
         initView();
         setOnClick();
         getDataIntent();
@@ -153,7 +149,7 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
             public void onResponse(Call<List<Province>> call, Response<List<Province>> response) {
                 if (response.isSuccessful()) {
                     provinceList = response.body();
-                    ProvinceAdapter provinceAdapter = new ProvinceAdapter(MyAddressDetailActivity.this, R.layout.item_address, provinceList);
+                    ProvinceAdapter provinceAdapter = new ProvinceAdapter(AddressDetailActivity.this, R.layout.item_address, provinceList);
                     provinceAdapter.setDropDownViewResource(R.layout.item_address);
                     spnProvince.setAdapter(provinceAdapter);
 
@@ -190,7 +186,7 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
         for (Province province : provinceList) {
             if (province.getId() == idProvince) {
                 districtsList = province.getDistricts();
-                DistrictsAdapter districtsAdapter = new DistrictsAdapter(MyAddressDetailActivity.this, R.layout.item_address, districtsList);
+                DistrictsAdapter districtsAdapter = new DistrictsAdapter(AddressDetailActivity.this, R.layout.item_address, districtsList);
                 districtsAdapter.setDropDownViewResource(R.layout.item_address);
                 spnDistrict.setAdapter(districtsAdapter);
 
@@ -223,7 +219,7 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
         for (Districts districts : districtsList) {
             if (districts.getId() == idDistrict) {
                 wardsList = districts.getWards();
-                WardsAdapter wardsAdapter = new WardsAdapter(MyAddressDetailActivity.this, R.layout.item_address, wardsList);
+                WardsAdapter wardsAdapter = new WardsAdapter(AddressDetailActivity.this, R.layout.item_address, wardsList);
                 wardsAdapter.setDropDownViewResource(R.layout.item_address);
                 spnWard.setAdapter(wardsAdapter);
 
@@ -252,7 +248,7 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
     }
 
     private void getMyAddressDetail(Long id) {
-        TokenDto user = UserManager.getSavedUser(MyAddressDetailActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
+        TokenDto user = UserManager.getSavedUser(AddressDetailActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
         String token = user.getToken();
         UserAddressService userAddressService = ApiUtils.getUserAddressAPIService();
         Call<UserAdressResponse> call = userAddressService.getAddressDetail("Bearer " + token, id);
@@ -308,7 +304,7 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
         } else {
             userAdressRequest = new UserAdressRequest(id, fullName, phone, streetName, primaryAddres, wards);
         }
-        TokenDto user = UserManager.getSavedUser(MyAddressDetailActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
+        TokenDto user = UserManager.getSavedUser(AddressDetailActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
         String token = user.getToken();
         UserAddressService userAddressService = ApiUtils.getUserAddressAPIService();
         Call<UserAdressResponse> call = userAddressService.creatAddress("Bearer " + token, userAdressRequest);
@@ -317,17 +313,17 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
             public void onResponse(Call<UserAdressResponse> call, Response<UserAdressResponse> response) {
                 if (response.isSuccessful()) {
                     UserAdressResponse result = response.body();
-                    startActivity(new Intent(MyAddressDetailActivity.this, MyAddressActivity.class));
-                    ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.SUCCESS, "Tạo địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    startActivity(new Intent(AddressDetailActivity.this, MyAddressActivity.class));
+                    ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.SUCCESS, "Tạo địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 } else {
-                    ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.ERROR, "Tạo địa chỉ không thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.ERROR, "Tạo địa chỉ không thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 }
 
             }
 
             @Override
             public void onFailure(Call<UserAdressResponse> call, Throwable t) {
-                ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.ERROR, "Tạo địa chỉ ònail", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.ERROR, "Tạo địa chỉ ònail", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
 
             }
         });
@@ -364,7 +360,7 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
         } else {
             userAdressRequest = new UserAdressRequest(id, fullName, phone, streetName, primaryAddres, wards);
         }
-        TokenDto user = UserManager.getSavedUser(MyAddressDetailActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
+        TokenDto user = UserManager.getSavedUser(AddressDetailActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
         String token = user.getToken();
         UserAddressService userAddressService = ApiUtils.getUserAddressAPIService();
         Call<UserAdressResponse> call = userAddressService.updateAddress("Bearer " + token, userAdressRequest);
@@ -373,24 +369,24 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
             public void onResponse(Call<UserAdressResponse> call, Response<UserAdressResponse> response) {
                 if (response.isSuccessful()) {
                     UserAdressResponse result = response.body();
-                    startActivity(new Intent(MyAddressDetailActivity.this, MyAddressActivity.class));
-                    ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.SUCCESS, "Cập nhật địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    startActivity(new Intent(AddressDetailActivity.this, MyAddressActivity.class));
+                    ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.SUCCESS, "Cập nhật địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 } else {
-                    ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.ERROR, "Cập nhật địa chỉ không thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.ERROR, "Cập nhật địa chỉ không thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 }
 
             }
 
             @Override
             public void onFailure(Call<UserAdressResponse> call, Throwable t) {
-                ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.ERROR, "Tạo địa chỉ ònail", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.ERROR, "Tạo địa chỉ ònail", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
 
             }
         });
     }
 
     private void deleteMyAddress(Long id) {
-        TokenDto user = UserManager.getSavedUser(MyAddressDetailActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
+        TokenDto user = UserManager.getSavedUser(AddressDetailActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
         String token = user.getToken();
         UserAddressService userAddressService = ApiUtils.getUserAddressAPIService();
         Call<Void> call = userAddressService.deleteAddress("Bearer " + token, id);
@@ -398,10 +394,10 @@ public class MyAddressDetailActivity extends AppCompatActivity implements View.O
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    startActivity(new Intent(MyAddressDetailActivity.this, MyAddressActivity.class));
-                    ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.SUCCESS, "Xóa địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    startActivity(new Intent(AddressDetailActivity.this, MyAddressActivity.class));
+                    ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.SUCCESS, "Xóa địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 } else {
-                    ToastPerfect.makeText(MyAddressDetailActivity.this, ToastPerfect.INFORMATION, "Xóa địa chỉ ko thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.INFORMATION, "Xóa địa chỉ ko thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 }
             }
 

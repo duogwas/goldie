@@ -16,17 +16,16 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:foregroundGravity="center">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="140dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="100dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_cart_empty" />
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/empty_box" />
 
         <TextView
             android:id="@+id/textView7"
@@ -36,9 +35,8 @@
             android:fontFamily="@font/be_vietnam_bold"
             android:text="Chưa có sản phẩm nào"
             android:textColor="#757575"
-            android:textSize="30sp"
+            android:textSize="25sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -61,6 +59,7 @@
             android:fontFamily="@font/be_vietnam_bold"
             android:gravity="center"
             android:text="Giỏ hàng"
+            android:textAllCaps="true"
             android:textColor="#373b54"
             android:textSize="25sp"
             app:layout_constraintEnd_toEndOf="parent"

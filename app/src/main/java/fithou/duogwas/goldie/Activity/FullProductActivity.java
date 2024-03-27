@@ -4,10 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import fithou.duogwas.goldie.Adapter.CategoryAdapter;
 import fithou.duogwas.goldie.Adapter.DialogCategoryAdapter;
 import fithou.duogwas.goldie.Adapter.ProductAdapter;
 import fithou.duogwas.goldie.R;
@@ -47,13 +46,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FullProduct extends AppCompatActivity implements View.OnClickListener, SearchView.OnQueryTextListener {
+public class FullProductActivity extends AppCompatActivity implements View.OnClickListener, SearchView.OnQueryTextListener {
     String sort;
     RecyclerView rcvProduct;
     SearchView searchView;
     AppCompatButton btnFilter;
     ImageButton btnSort;
-    ImageView imgBack;
+    ImageView ivBack;
     FrameLayout FrameLayout;
     DialogCategoryAdapter dialogCategoryAdapter;
     List<Long> listIdCategory = new ArrayList<Long>();
@@ -75,19 +74,19 @@ public class FullProduct extends AppCompatActivity implements View.OnClickListen
         btnFilter = findViewById(R.id.btnFilter);
         btnSort = findViewById(R.id.btnSort);
         rcvProduct = findViewById(R.id.rcvProduct);
-        imgBack = findViewById(R.id.imgBack);
+        ivBack = findViewById(R.id.ivBack);
         FrameLayout = findViewById(R.id.FrameLayout);
     }
 
     private void setOnClick() {
         btnSort.setOnClickListener(this);
         btnFilter.setOnClickListener(this);
-        imgBack.setOnClickListener(this);
+        ivBack.setOnClickListener(this);
         searchView.setOnQueryTextListener(this);
     }
 
     private void getFullProduct(String sort) {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProduct.this, 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
         rcvProduct.setLayoutManager(gridLayoutManager);
         ProductService productService = ApiUtils.getProductAPIService();
         Call<Page<ProductResponse>> call = productService.getProductPage(0, 10, sort);
@@ -97,7 +96,7 @@ public class FullProduct extends AppCompatActivity implements View.OnClickListen
                 if (response.isSuccessful()) {
                     Page<ProductResponse> page = response.body();
                     List<ProductResponse> product = page.getContent();
-                    ProductAdapter productAdapter = new ProductAdapter(product, FullProduct.this);
+                    ProductAdapter productAdapter = new ProductAdapter(product, FullProductActivity.this);
                     rcvProduct.setAdapter(productAdapter);
                 } else {
                     Log.e("getFullProduct", "Lỗi phản hồi không thành công");
@@ -204,7 +203,7 @@ public class FullProduct extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onClick(View view) {
                 filterProduct(smallPrice, largePrice, listIdCategory);
-                Toast.makeText(FullProduct.this, "list: " + listIdCategory.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(FullProductActivity.this, "list: " + listIdCategory.toString(), Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
@@ -218,7 +217,7 @@ public class FullProduct extends AppCompatActivity implements View.OnClickListen
     }
 
     private void loadCategoriesDialog(RecyclerView rcv) {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProduct.this, 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
         rcv.setLayoutManager(gridLayoutManager);
         CategoryService categoryService = ApiUtils.getCategoryAPIService();
         Call<List<CategoryResponse>> call = categoryService.GetCategoriesList();
@@ -226,7 +225,7 @@ public class FullProduct extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onResponse(Call<List<CategoryResponse>> call, Response<List<CategoryResponse>> response) {
                 List<CategoryResponse> categoryResponse = response.body();
-                dialogCategoryAdapter = new DialogCategoryAdapter(categoryResponse, FullProduct.this);
+                dialogCategoryAdapter = new DialogCategoryAdapter(categoryResponse, FullProductActivity.this);
                 rcv.setAdapter(dialogCategoryAdapter);
                 dialogCategoryAdapter.setOnCbCategoryListener(new DialogCategoryAdapter.OnCbCategoryListener() {
                     @Override
@@ -244,7 +243,7 @@ public class FullProduct extends AppCompatActivity implements View.OnClickListen
     }
 
     private void filterProduct(double smallPrice, double largePrice, List<Long> listIdCategory) {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProduct.this, 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
         rcvProduct.setLayoutManager(gridLayoutManager);
         ProductService productService = ApiUtils.getProductAPIService();
         Call<Page<ProductResponse>> call = productService.filterProduct(smallPrice, largePrice, 0, 10, listIdCategory);
@@ -254,7 +253,7 @@ public class FullProduct extends AppCompatActivity implements View.OnClickListen
                 if (response.isSuccessful()) {
                     Page<ProductResponse> page = response.body();
                     List<ProductResponse> product = page.getContent();
-                    ProductAdapter productAdapter = new ProductAdapter(product, FullProduct.this);
+                    ProductAdapter productAdapter = new ProductAdapter(product, FullProductActivity.this);
                     rcvProduct.setAdapter(productAdapter);
                 } else {
                     Log.e("getFullProduct", "Lỗi phản hồi không thành công");
@@ -270,7 +269,7 @@ public class FullProduct extends AppCompatActivity implements View.OnClickListen
     }
 
     private void findProductByParam(String param) {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProduct.this, 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
         rcvProduct.setLayoutManager(gridLayoutManager);
         ProductService productService = ApiUtils.getProductAPIService();
         Call<Page<ProductResponse>> call = productService.getProductByParam(param, 0, 10);
@@ -280,7 +279,7 @@ public class FullProduct extends AppCompatActivity implements View.OnClickListen
                 if (response.isSuccessful()) {
                     Page<ProductResponse> page = response.body();
                     List<ProductResponse> product = page.getContent();
-                    ProductAdapter productAdapter = new ProductAdapter(product, FullProduct.this);
+                    ProductAdapter productAdapter = new ProductAdapter(product, FullProductActivity.this);
                     rcvProduct.setAdapter(productAdapter);
                 } else {
                     Log.e("findProductByParam", "Lỗi phản hồi không thành công");
@@ -306,7 +305,8 @@ public class FullProduct extends AppCompatActivity implements View.OnClickListen
             case R.id.btnSort:
                 showDialogSort();
                 break;
-            case R.id.imgBack:
+            case R.id.ivBack:
+                startActivity(new Intent(FullProductActivity.this,MainActivity.class));
                 finish();
                 break;
             default:

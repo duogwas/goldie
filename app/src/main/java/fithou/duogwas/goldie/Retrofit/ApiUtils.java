@@ -5,9 +5,10 @@ package fithou.duogwas.goldie.Retrofit;
 
 
 public class ApiUtils {
-    private ApiUtils() {}
+    private ApiUtils() {
+    }
 
-//    public static final String BASE_URL = "http://172.16.15.175:8080/api/"; //cty
+//        public static final String BASE_URL = "http://172.16.15.104:8080/api/"; //cty
     public static final String BASE_URL = "http://192.168.1.61:8080/api/";  //home
 //    public static final String BASE_URL = "http://172.20.10.4:8080/api/";  //4g
 //    public static final String BASE_URL = "http://192.168.2.128:8080/api/";  //home2
@@ -30,5 +31,17 @@ public class ApiUtils {
 
     public static AddressService getAddressAPIService() {
         return RetrofitClient.getClient(BASE_URL).create(AddressService.class);
+    }
+
+    public static InvoiceService getInvoiceAPIService() {
+        return RetrofitClient.getClient(BASE_URL).create(InvoiceService.class);
+    }
+
+    public static VoucherService getVoucherAPIService() {
+        return RetrofitClient.getClient(BASE_URL).create(VoucherService.class);
+    }
+
+    public static MoMoService getMomoAPIService() {
+        return RetrofitClient.getClient(BASE_URL).create(MoMoService.class);
     }
 }

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,9 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 
-import fithou.duogwas.goldie.Activity.MyAddressDetailActivity;
-import fithou.duogwas.goldie.Activity.ProductDetailActivity;
-import fithou.duogwas.goldie.Activity.SignInActivity;
+import fithou.duogwas.goldie.Activity.AddressDetailActivity;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.UserAdressResponse;
 
@@ -59,7 +56,7 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, MyAddressDetailActivity.class);
+                Intent intent = new Intent(context, AddressDetailActivity.class);
                 intent.putExtra("idAddress", response.getId());
                 intent.putExtra("idProvince", response.getWards().getDistricts().getProvince().getId());
                 intent.putExtra("idDistrict", response.getWards().getDistricts().getId());

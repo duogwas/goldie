@@ -24,7 +24,8 @@ import com.bdtopcoder.smart_slider.SliderItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import fithou.duogwas.goldie.Activity.FullProduct;
+import fithou.duogwas.goldie.Activity.FullProductActivity;
+import fithou.duogwas.goldie.Activity.MainActivity;
 import fithou.duogwas.goldie.Adapter.CategoryAdapter;
 import fithou.duogwas.goldie.Adapter.ProductAdapter;
 import fithou.duogwas.goldie.R;
@@ -68,6 +69,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         LoadUserInfor();
         LoadCategoriesList();
         LoadProductList();
+        refreshCountItemCart();
     }
 
     private void initView() {
@@ -93,6 +95,13 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     private void LoadUserInfor() {
         user = UserManager.getSavedUser(getContext(), "User", "MODE_PRIVATE", TokenDto.class);
         tvHiName.setText("Xin chào,\n" + user.getUser().getFullname());
+    }
+
+    private void refreshCountItemCart() {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            mainActivity.countItemInCart();
+        }
     }
 
     private void LoadCategoriesList() {
@@ -175,7 +184,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tvSeeAllProduct:
-                Intent intent = new Intent(getContext(), FullProduct.class);
+                Intent intent = new Intent(getContext(), FullProductActivity.class);
                 startActivity(intent);
                 break;
 
