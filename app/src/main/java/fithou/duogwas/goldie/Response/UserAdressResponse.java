@@ -4,10 +4,12 @@ package fithou.duogwas.goldie.Response;
 //
 
 
+import java.io.Serializable;
+
 import fithou.duogwas.goldie.Entity.User;
 import fithou.duogwas.goldie.Entity.Wards;
 
-public class UserAdressResponse {
+public class UserAdressResponse implements Serializable {
     private Long id;
 
     private String fullname;

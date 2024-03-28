@@ -4,10 +4,11 @@ package fithou.duogwas.goldie.Entity;
 //
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Districts {
+public class Districts implements Serializable {
     private Long id;
 
     private String name;

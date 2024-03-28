@@ -15,7 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import fithou.duogwas.goldie.Adapter.UserAddressAdapter;
+import fithou.duogwas.goldie.Adapter.MyAddressAdapter;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.TokenDto;
 import fithou.duogwas.goldie.Response.UserAdressResponse;
@@ -30,6 +30,7 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
     FloatingActionButton btnCreateAddress;
     RecyclerView rcvMyAddress;
     ImageView ivBack;
+    int checkIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
         initView();
         setOnClick();
         getMyAddress();
+        checkIntent();
     }
 
     private void initView() {
@@ -50,6 +52,11 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
     private void setOnClick() {
         ivBack.setOnClickListener(this);
         btnCreateAddress.setOnClickListener(this);
+    }
+
+    private void checkIntent() {
+        Intent intent = getIntent();
+        checkIntent = intent.getIntExtra("changeAdd", -1);
     }
 
     private void getMyAddress() {
@@ -64,8 +71,8 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
                     List<UserAdressResponse> userAdressResponses = response.body();
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MyAddressActivity.this, LinearLayoutManager.VERTICAL, false);
                     rcvMyAddress.setLayoutManager(linearLayoutManager);
-                    UserAddressAdapter userAddressAdapter = new UserAddressAdapter(userAdressResponses, MyAddressActivity.this);
-                    rcvMyAddress.setAdapter(userAddressAdapter);
+                    MyAddressAdapter myAddressAdapter = new MyAddressAdapter(userAdressResponses, MyAddressActivity.this,checkIntent);
+                    rcvMyAddress.setAdapter(myAddressAdapter);
                 } else {
                     Toast.makeText(MyAddressActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 }

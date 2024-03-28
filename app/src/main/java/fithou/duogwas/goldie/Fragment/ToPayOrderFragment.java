@@ -19,14 +19,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import fithou.duogwas.goldie.Activity.CheckOutActivity;
-import fithou.duogwas.goldie.Activity.MyAddressActivity;
 import fithou.duogwas.goldie.Adapter.MyOrderAdapter;
-import fithou.duogwas.goldie.Adapter.UserAddressAdapter;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.InvoiceResponse;
 import fithou.duogwas.goldie.Response.TokenDto;
-import fithou.duogwas.goldie.Response.UserAdressResponse;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.InvoiceService;
 import fithou.duogwas.goldie.Utils.UserManager;

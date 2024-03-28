@@ -67,20 +67,21 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
     );
+    UserAdressResponse addressDefault = null;
+    int changeAdd, createAdd;
     String requestIdMomo = null;
     String orderIdMomo = null;
-    UserAdressResponse addressDefault = null;
     String voucher = null;
     Double discount = 0.0;
     Double shipPrice = 20000.0;
     Double totalInit = 0.0;
     LinearLayout progressBar;
-    ConstraintLayout placeOrderSuccess, placeOrder, clVoucherDiscount;
     ImageView ivBack;
+    ConstraintLayout placeOrderSuccess, placeOrder, clVoucherDiscount, clNotAddress, clAddressInfor;
+    TextView tvChangeAddress, tvAddAddress, tvErrVoucher;
     TextView tvUserName, tvPhoneNumber, tvAddress;
     TextView tvTotalProductPrice, tvTotalShipPrice, tvTotalPrice, tvTotalVoucherDiscount;
     TextView tvPayOnDelivery, tvPayWithMomo;
-    TextView tvErrVoucher;
     EditText edtNote, edtVoucher;
     AppCompatButton btnOrder, btnContinueShopping, btnVoucher;
     RadioButton rbPayOnDelivery, rbPayWithMomo;
@@ -94,8 +95,9 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_check_out);
         initView();
         setOnClick();
-        loadProductCart();
+        changeAddress();
         loadUserAddress();
+        loadProductCart();
     }
 
     private void initView() {
@@ -123,6 +125,10 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
         edtVoucher = findViewById(R.id.edtVoucher);
         tvErrVoucher = findViewById(R.id.tvErrVoucher);
         btnVoucher = findViewById(R.id.btnVoucher);
+        clAddressInfor = findViewById(R.id.clAddressInfor);
+        clNotAddress = findViewById(R.id.clNotAddress);
+        tvChangeAddress = findViewById(R.id.tvChangeAddress);
+        tvAddAddress = findViewById(R.id.tvAddAddress);
     }
 
     private void setOnClick() {
@@ -132,6 +138,24 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
         btnContinueShopping.setOnClickListener(this);
         btnVoucher.setOnClickListener(this);
         ivBack.setOnClickListener(this);
+        tvChangeAddress.setOnClickListener(this);
+        tvAddAddress.setOnClickListener(this);
+    }
+
+    private void changeAddress() {
+        Intent intent = getIntent();
+        changeAdd = intent.getIntExtra("changeAdd", -1);
+        createAdd = intent.getIntExtra("createAdd", -1);
+        addressDefault = (UserAdressResponse) intent.getSerializableExtra("addressResponse");
+        if (addressDefault != null && changeAdd == 1) {
+            tvChangeAddress.setText("Thay đổi");
+            tvUserName.setText(addressDefault.getFullname());
+            tvPhoneNumber.setText("| " + addressDefault.getPhone());
+            tvAddress.setText(addressDefault.getStreetName() + ", "
+                    + addressDefault.getWards().getName()
+                    + ", " + addressDefault.getWards().getDistricts().getName()
+                    + ", " + addressDefault.getWards().getDistricts().getProvince().getName());
+        }
     }
 
     private String formatPrice(Double totalPrice) {
@@ -180,18 +204,42 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
             public void onResponse(Call<List<UserAdressResponse>> call, Response<List<UserAdressResponse>> response) {
                 if (response.isSuccessful()) {
                     List<UserAdressResponse> userAdressResponses = response.body();
-                    for (UserAdressResponse userAdressItem : userAdressResponses) {
-                        if (userAdressItem.getPrimaryAddres()) {
-                            addressDefault = userAdressItem;
-                            break;
+                    if (changeAdd == -1) {
+                        if (userAdressResponses.size() == 0) {
+                            clNotAddress.setVisibility(View.VISIBLE);
+                            clAddressInfor.setVisibility(View.GONE);
+                        } else {
+                            tvChangeAddress.setText("Thay đổi");
+                            for (UserAdressResponse userAdressItem : userAdressResponses) {
+                                if (userAdressItem.getPrimaryAddres()) {
+                                    addressDefault = userAdressItem;
+                                    break;
+                                }
+                                {
+                                    addressDefault = userAdressResponses.get(0);
+                                }
+                            }
+                            tvUserName.setText(addressDefault.getFullname());
+                            tvPhoneNumber.setText("| " + addressDefault.getPhone());
+                            tvAddress.setText(addressDefault.getStreetName() + ", "
+                                    + addressDefault.getWards().getName()
+                                    + ", " + addressDefault.getWards().getDistricts().getName()
+                                    + ", " + addressDefault.getWards().getDistricts().getProvince().getName());
                         }
                     }
-                    tvUserName.setText(addressDefault.getFullname());
-                    tvPhoneNumber.setText(addressDefault.getPhone());
-                    tvAddress.setText(addressDefault.getStreetName() + ", "
-                            + addressDefault.getWards().getName()
-                            + ", " + addressDefault.getWards().getDistricts().getName()
-                            + ", " + addressDefault.getWards().getDistricts().getProvince().getName());
+
+                    if (createAdd == 1) {
+                        clAddressInfor.setVisibility(View.VISIBLE);
+                        clNotAddress.setVisibility(View.GONE);
+                        tvChangeAddress.setText("Thay đổi");
+                        addressDefault = userAdressResponses.get(userAdressResponses.size() - 1);
+                        tvUserName.setText(addressDefault.getFullname());
+                        tvPhoneNumber.setText("| " + addressDefault.getPhone());
+                        tvAddress.setText(addressDefault.getStreetName() + ", "
+                                + addressDefault.getWards().getName()
+                                + ", " + addressDefault.getWards().getDistricts().getName()
+                                + ", " + addressDefault.getWards().getDistricts().getProvince().getName());
+                    }
                 } else {
                     Toast.makeText(CheckOutActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 }
@@ -394,6 +442,7 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.ivBack:
                 finish();
@@ -413,6 +462,20 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
 
             case R.id.btnContinueShopping:
                 startActivity(new Intent(this, MainActivity.class));
+                break;
+
+            case R.id.tvChangeAddress:
+                intent = new Intent(CheckOutActivity.this, MyAddressActivity.class);
+                intent.putExtra("changeAdd", 1);
+                startActivity(intent);
+                finish();
+                break;
+
+            case R.id.tvAddAddress:
+                intent = new Intent(CheckOutActivity.this, AddressDetailActivity.class);
+                intent.putExtra("createAddShip", 1);
+                startActivity(intent);
+                finish();
                 break;
 
             case R.id.btnOrder:

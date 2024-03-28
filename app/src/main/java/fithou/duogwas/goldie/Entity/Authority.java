@@ -4,7 +4,9 @@ package fithou.duogwas.goldie.Entity;
 //
 
 
-public class Authority {
+import java.io.Serializable;
+
+public class Authority implements Serializable {
     String name;
 
     public String getName() {

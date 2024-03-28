@@ -63,7 +63,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 .load(cart.getProduct().getImageBanner())
                 .into(holder.ivImage);
         holder.tvName.setText(cart.getProduct().getName());
-        holder.tvOption.setText("Màu " + cart.getColor().getColorName() + ", Size " + cart.getSize().getSizeName());
+        holder.tvOption.setText(cart.getColor().getColorName() + ", " + cart.getSize().getSizeName());
         holder.tvCount.setText(String.valueOf(cart.getQuantity()));
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedPrice = currencyFormat.format(cart.getProduct().getPrice());

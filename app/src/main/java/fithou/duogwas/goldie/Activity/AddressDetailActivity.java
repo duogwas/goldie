@@ -54,6 +54,7 @@ public class AddressDetailActivity extends AppCompatActivity implements View.OnC
     List<Wards> wardsList = new ArrayList<>();
     Long idProvince, idDistrict, idWards;
     Long idAddress, idProvinceI, idDistrictI, idWardsI;
+    int createAddShip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,7 @@ public class AddressDetailActivity extends AppCompatActivity implements View.OnC
 
     private void getDataIntent() {
         Intent intent = getIntent();
+        createAddShip = intent.getIntExtra("createAddShip", -1);
         idAddress = intent.getLongExtra("idAddress", -1);
         idProvinceI = intent.getLongExtra("idProvince", -1);
         idDistrictI = intent.getLongExtra("idDistrict", -1);
@@ -102,7 +104,7 @@ public class AddressDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void updateUI(Long idAddress) {
-        if (idAddress == -1) {
+        if (idAddress == -1 ) {
             tvTittle.setText("ĐỊA CHỈ MỚI");
             btnUpdate.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
@@ -313,8 +315,18 @@ public class AddressDetailActivity extends AppCompatActivity implements View.OnC
             public void onResponse(Call<UserAdressResponse> call, Response<UserAdressResponse> response) {
                 if (response.isSuccessful()) {
                     UserAdressResponse result = response.body();
-                    startActivity(new Intent(AddressDetailActivity.this, MyAddressActivity.class));
-                    ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.SUCCESS, "Tạo địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    if (createAddShip != -1) {
+                        ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.SUCCESS, "Tạo địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                        Intent intent = new Intent(AddressDetailActivity.this, CheckOutActivity.class);
+                        intent.putExtra("addressResponse", result);
+                        intent.putExtra("createAdd", 1);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        startActivity(new Intent(AddressDetailActivity.this, MyAddressActivity.class));
+                        ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.SUCCESS, "Tạo địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    }
+
                 } else {
                     ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.ERROR, "Tạo địa chỉ không thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 }

@@ -4,7 +4,9 @@ package fithou.duogwas.goldie.Entity;
 //
 
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     int id;
 
     String username;
