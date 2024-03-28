@@ -4,7 +4,9 @@ package fithou.duogwas.goldie.Entity;
 //
 
 
-public class Wards {
+import java.io.Serializable;
+
+public class Wards implements Serializable {
     private Long id;
 
     private String name;

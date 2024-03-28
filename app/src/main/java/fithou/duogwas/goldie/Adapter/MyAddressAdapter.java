@@ -19,16 +19,19 @@ import java.util.List;
 
 
 import fithou.duogwas.goldie.Activity.AddressDetailActivity;
+import fithou.duogwas.goldie.Activity.CheckOutActivity;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.UserAdressResponse;
 
-public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.ViewHolder> {
+public class MyAddressAdapter extends RecyclerView.Adapter<MyAddressAdapter.ViewHolder> {
     Context context;
     List<UserAdressResponse> userAddressResponses;
+    int checkIntent;
 
-    public UserAddressAdapter(List<UserAdressResponse> userAddressResponse, Context context) {
+    public MyAddressAdapter(List<UserAdressResponse> userAddressResponse, Context context, int checkIntent) {
         this.userAddressResponses = userAddressResponse;
         this.context = context;
+        this.checkIntent = checkIntent;
     }
 
     @NonNull
@@ -56,12 +59,20 @@ public class UserAddressAdapter extends RecyclerView.Adapter<UserAddressAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, AddressDetailActivity.class);
-                intent.putExtra("idAddress", response.getId());
-                intent.putExtra("idProvince", response.getWards().getDistricts().getProvince().getId());
-                intent.putExtra("idDistrict", response.getWards().getDistricts().getId());
-                intent.putExtra("idWards", response.getWards().getId());
-                context.startActivity(intent);
+                if(checkIntent==1){
+                    Intent intent = new Intent(context, CheckOutActivity.class);
+                    intent.putExtra("addressResponse",response);
+                    intent.putExtra("changeAdd", 1);
+                    context.startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(context, AddressDetailActivity.class);
+                    intent.putExtra("idAddress", response.getId());
+                    intent.putExtra("idProvince", response.getWards().getDistricts().getProvince().getId());
+                    intent.putExtra("idDistrict", response.getWards().getDistricts().getId());
+                    intent.putExtra("idWards", response.getWards().getId());
+                    context.startActivity(intent);
+                }
             }
         });
 
