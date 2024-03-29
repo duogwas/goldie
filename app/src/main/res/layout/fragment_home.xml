@@ -52,10 +52,10 @@
             <com.smarteist.autoimageslider.SliderView
                 android:id="@+id/smartSlider"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_marginStart="32dp"
+                android:layout_height="170dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ivAvatar"
                 app:sliderAnimationDuration="600"
@@ -92,7 +92,6 @@
                 android:id="@+id/clCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/searchViewProduct">
@@ -125,6 +124,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

@@ -91,8 +91,9 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
 
     private void sliderBanner() {
         List<ProductImage> sliderItems = new ArrayList<>();
-        sliderItems.add(new ProductImage("https://res.cloudinary.com/dxketb89r/image/upload/v1711637484/banner_1_hzvxqm.png"));
-        sliderItems.add(new ProductImage("https://res.cloudinary.com/dxketb89r/image/upload/v1711637484/banner_1_hzvxqm.png"));
+        sliderItems.add(new ProductImage("https://res.cloudinary.com/dxketb89r/image/upload/v1711728862/banner_goldie_pchxc0.png"));
+        sliderItems.add(new ProductImage("https://res.cloudinary.com/dxketb89r/image/upload/v1711728864/Goldie_Chaubui_iicsdt.png"));
+        sliderItems.add(new ProductImage("https://res.cloudinary.com/dxketb89r/image/upload/v1711728864/goldie_sontung_vcqtve.png"));
 
         ProductImageSliderAdapter adapterImage = new ProductImageSliderAdapter(sliderItems, getContext());
         smartSlider.setSliderAdapter(adapterImage);
