@@ -21,6 +21,8 @@ import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.ErrorResponse;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.UserService;
+import fithou.duogwas.goldie.Utils.DeviceTokenManager;
+import fithou.duogwas.goldie.Utils.UserManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,11 +38,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sign_up);
-        AnhXa();
+        initView();
         setOnClick();
     }
 
-    private void AnhXa() {
+    private void initView() {
         edtFullName = findViewById(R.id.edtFullName);
         edtPhone = findViewById(R.id.edtPhone);
         edtEmail = findViewById(R.id.edtEmail);
@@ -56,12 +58,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         btnSignUp.setOnClickListener(SignUpActivity.this);
     }
 
-    private void SignUp() {
+    private void signUp() {
         tvError.setVisibility(View.GONE);
         String email = edtEmail.getText().toString();
         String password = edtPassword.getText().toString();
         String fullname = edtFullName.getText().toString();
         String phone = edtPhone.getText().toString();
+        String tokenFCM = DeviceTokenManager.getDeviceToken(SignUpActivity.this);
 
         if (fullname.isEmpty()) {
             edtFullName.setError("Vui lòng điền Họ tên của bạn");
@@ -91,7 +94,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        User userRegis = new User(email, password, fullname, phone);
+        User userRegis = new User(email, password, fullname, phone, tokenFCM);
         UserService userService = ApiUtils.getUserAPIService();
         Call<User> call = userService.SignUp(userRegis);
         call.enqueue(new Callback<User>() {
@@ -104,6 +107,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void run() {
                         if (response.isSuccessful()) {
+                            User user = response.body();
+                            UserManager.saveUser(SignUpActivity.this, "User", "MODE_PRIVATE", user);
                             Intent intent = new Intent(SignUpActivity.this, ActiveAccountActivity.class);
                             intent.putExtra("emailRegis", email);
                             intent.putExtra("passwordRegis", password);
@@ -143,7 +148,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent;
         switch (view.getId()) {
             case R.id.btnSignUp:
-                SignUp();
+                signUp();
                 break;
 
             case R.id.tvSignIn:
