@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,6 +34,7 @@ import retrofit2.Response;
 import vn.thanguit.toastperfect.ToastPerfect;
 
 public class CancelledOrderFragment extends Fragment {
+    ShimmerFrameLayout shimmerMyOrder;
     ConstraintLayout clNoOrder, clOrder;
     RecyclerView rcvOrder;
     Long idStt = Long.valueOf(5);
@@ -58,6 +61,8 @@ public class CancelledOrderFragment extends Fragment {
         clOrder = getView().findViewById(R.id.clOrder);
         clNoOrder = getView().findViewById(R.id.clNoOrder);
         rcvOrder = getView().findViewById(R.id.rcvOrder);
+        shimmerMyOrder = getView().findViewById(R.id.shimmerMyOrder);
+        shimmerMyOrder.startShimmer();
     }
 
     private void getMyOrder(Long idStatus) {
@@ -73,6 +78,9 @@ public class CancelledOrderFragment extends Fragment {
                     if (invoiceResponses.size() == 0) {
                         clOrder.setVisibility(View.GONE);
                         clNoOrder.setVisibility(View.VISIBLE);
+                        shimmerMyOrder.hideShimmer();
+                        shimmerMyOrder.stopShimmer();
+                        shimmerMyOrder.setVisibility(View.GONE);
                     } else {
                         for (InvoiceResponse invoiceResponse : invoiceResponses) {
                             if (invoiceResponse.getStatus().getId().equals(idStatus)) {
@@ -82,6 +90,9 @@ public class CancelledOrderFragment extends Fragment {
                         if (listInvoiceCancelled.size() == 0) {
                             clOrder.setVisibility(View.GONE);
                             clNoOrder.setVisibility(View.VISIBLE);
+                            shimmerMyOrder.hideShimmer();
+                            shimmerMyOrder.stopShimmer();
+                            shimmerMyOrder.setVisibility(View.GONE);
                         } else {
                             Collections.sort(listInvoiceCancelled, new Comparator<InvoiceResponse>() {
                                 @Override
@@ -94,16 +105,20 @@ public class CancelledOrderFragment extends Fragment {
                             rcvOrder.setLayoutManager(linearLayoutManager);
                             MyOrderAdapter myOrderAdapter = new MyOrderAdapter(listInvoiceCancelled, getContext());
                             rcvOrder.setAdapter(myOrderAdapter);
+                            rcvOrder.setVisibility(View.VISIBLE);
+                            shimmerMyOrder.hideShimmer();
+                            shimmerMyOrder.stopShimmer();
+                            shimmerMyOrder.setVisibility(View.GONE);
                         }
                     }
                 } else {
-                    ToastPerfect.makeText(getContext(), ToastPerfect.SUCCESS, "thất bại", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    Log.e("getMyCancelledOrder", "response not successful");
                 }
             }
 
             @Override
             public void onFailure(Call<List<InvoiceResponse>> call, Throwable t) {
-                Log.e("toPay", t.getMessage());
+                Log.e("getMyCancelledOrder", "onFailure: " + t.getMessage());
             }
         });
     }

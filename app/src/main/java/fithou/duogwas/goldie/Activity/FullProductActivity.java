@@ -1,11 +1,5 @@
 package fithou.duogwas.goldie.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +18,14 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.RangeSlider;
 
@@ -50,11 +51,12 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
     String sort;
     RecyclerView rcvProduct;
     SearchView searchView;
-    AppCompatButton btnFilter;
+    AppCompatButton btnFilterOut, btnDeleteFilter;
     ImageButton btnSort;
     ImageView ivBack;
-    FrameLayout FrameLayout;
+    ConstraintLayout clNoProduct;
     DialogCategoryAdapter dialogCategoryAdapter;
+    ShimmerFrameLayout shimmerProduct;
     List<Long> listIdCategory = new ArrayList<Long>();
     double smallPrice, largePrice;
 
@@ -71,23 +73,24 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
     private void initView() {
         rcvProduct = findViewById(R.id.rcvProduct);
         searchView = findViewById(R.id.searchView);
-        btnFilter = findViewById(R.id.btnFilter);
+        btnFilterOut = findViewById(R.id.btnFilter);
+        btnDeleteFilter = findViewById(R.id.btnDeleteFilter);
         btnSort = findViewById(R.id.btnSort);
-        rcvProduct = findViewById(R.id.rcvProduct);
         ivBack = findViewById(R.id.ivBack);
-        FrameLayout = findViewById(R.id.FrameLayout);
+        clNoProduct = findViewById(R.id.clNoProduct);
+        shimmerProduct = findViewById(R.id.shimmerProduct);
+        shimmerProduct.startShimmer();
     }
 
     private void setOnClick() {
         btnSort.setOnClickListener(this);
-        btnFilter.setOnClickListener(this);
+        btnFilterOut.setOnClickListener(this);
+        btnDeleteFilter.setOnClickListener(this);
         ivBack.setOnClickListener(this);
         searchView.setOnQueryTextListener(this);
     }
 
     private void getFullProduct(String sort) {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
-        rcvProduct.setLayoutManager(gridLayoutManager);
         ProductService productService = ApiUtils.getProductAPIService();
         Call<Page<ProductResponse>> call = productService.getProductPage(0, 10, sort);
         call.enqueue(new Callback<Page<ProductResponse>>() {
@@ -96,17 +99,22 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
                 if (response.isSuccessful()) {
                     Page<ProductResponse> page = response.body();
                     List<ProductResponse> product = page.getContent();
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
+                    rcvProduct.setLayoutManager(gridLayoutManager);
                     ProductAdapter productAdapter = new ProductAdapter(product, FullProductActivity.this);
                     rcvProduct.setAdapter(productAdapter);
+                    rcvProduct.setVisibility(View.VISIBLE);
+                    shimmerProduct.hideShimmer();
+                    shimmerProduct.stopShimmer();
+                    shimmerProduct.setVisibility(View.GONE);
                 } else {
-                    Log.e("getFullProduct", "Lỗi phản hồi không thành công");
+                    Log.e("getFullProduct", "response not successful");
                 }
-
             }
 
             @Override
             public void onFailure(Call<Page<ProductResponse>> call, Throwable t) {
-                Log.e("getFullProduct", "Lỗi kết nối" + t.getMessage());
+                Log.e("getFullProduct", "onFailure: " + t.getMessage());
             }
         });
     }
@@ -164,6 +172,8 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void showDialogFilter() {
+        smallPrice = 100000.0;
+        largePrice = 1000000.0;
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_filter_product);
@@ -203,11 +213,12 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(View view) {
                 filterProduct(smallPrice, largePrice, listIdCategory);
-                Toast.makeText(FullProductActivity.this, "list: " + listIdCategory.toString(), Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
+                btnFilterOut.setVisibility(View.GONE);
+                btnDeleteFilter.setVisibility(View.VISIBLE);
+                listIdCategory.clear();
             }
         });
-
 
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -217,14 +228,14 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void loadCategoriesDialog(RecyclerView rcv) {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
-        rcv.setLayoutManager(gridLayoutManager);
         CategoryService categoryService = ApiUtils.getCategoryAPIService();
         Call<List<CategoryResponse>> call = categoryService.GetCategoriesList();
         call.enqueue(new Callback<List<CategoryResponse>>() {
             @Override
             public void onResponse(Call<List<CategoryResponse>> call, Response<List<CategoryResponse>> response) {
                 List<CategoryResponse> categoryResponse = response.body();
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
+                rcv.setLayoutManager(gridLayoutManager);
                 dialogCategoryAdapter = new DialogCategoryAdapter(categoryResponse, FullProductActivity.this);
                 rcv.setAdapter(dialogCategoryAdapter);
                 dialogCategoryAdapter.setOnCbCategoryListener(new DialogCategoryAdapter.OnCbCategoryListener() {
@@ -243,8 +254,6 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void filterProduct(double smallPrice, double largePrice, List<Long> listIdCategory) {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
-        rcvProduct.setLayoutManager(gridLayoutManager);
         ProductService productService = ApiUtils.getProductAPIService();
         Call<Page<ProductResponse>> call = productService.filterProduct(smallPrice, largePrice, 0, 10, listIdCategory);
         call.enqueue(new Callback<Page<ProductResponse>>() {
@@ -253,24 +262,35 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
                 if (response.isSuccessful()) {
                     Page<ProductResponse> page = response.body();
                     List<ProductResponse> product = page.getContent();
-                    ProductAdapter productAdapter = new ProductAdapter(product, FullProductActivity.this);
-                    rcvProduct.setAdapter(productAdapter);
+                    if (product.size() == 0) {
+                        clNoProduct.setVisibility(View.VISIBLE);
+                        shimmerProduct.hideShimmer();
+                        shimmerProduct.stopShimmer();
+                        shimmerProduct.setVisibility(View.GONE);
+                    } else {
+                        clNoProduct.setVisibility(View.GONE);
+                        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
+                        rcvProduct.setLayoutManager(gridLayoutManager);
+                        ProductAdapter productAdapter = new ProductAdapter(product, FullProductActivity.this);
+                        rcvProduct.setAdapter(productAdapter);
+                        rcvProduct.setVisibility(View.VISIBLE);
+                        shimmerProduct.hideShimmer();
+                        shimmerProduct.stopShimmer();
+                        shimmerProduct.setVisibility(View.GONE);
+                    }
                 } else {
-                    Log.e("getFullProduct", "Lỗi phản hồi không thành công");
+                    Log.e("filterProduct", "response not successful");
                 }
-
             }
 
             @Override
             public void onFailure(Call<Page<ProductResponse>> call, Throwable t) {
-                Log.e("getFullProduct", "Lỗi kết nối" + t.getMessage());
+                Log.e("filterProduct", "onFailure: " + t.getMessage());
             }
         });
     }
 
     private void findProductByParam(String param) {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
-        rcvProduct.setLayoutManager(gridLayoutManager);
         ProductService productService = ApiUtils.getProductAPIService();
         Call<Page<ProductResponse>> call = productService.getProductByParam(param, 0, 10);
         call.enqueue(new Callback<Page<ProductResponse>>() {
@@ -279,22 +299,33 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
                 if (response.isSuccessful()) {
                     Page<ProductResponse> page = response.body();
                     List<ProductResponse> product = page.getContent();
-                    ProductAdapter productAdapter = new ProductAdapter(product, FullProductActivity.this);
-                    rcvProduct.setAdapter(productAdapter);
+                    if (product.size() == 0) {
+                        clNoProduct.setVisibility(View.VISIBLE);
+                        shimmerProduct.hideShimmer();
+                        shimmerProduct.stopShimmer();
+                        shimmerProduct.setVisibility(View.GONE);
+                    } else {
+                        clNoProduct.setVisibility(View.GONE);
+                        GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
+                        rcvProduct.setLayoutManager(gridLayoutManager);
+                        ProductAdapter productAdapter = new ProductAdapter(product, FullProductActivity.this);
+                        rcvProduct.setAdapter(productAdapter);
+                        rcvProduct.setVisibility(View.VISIBLE);
+                        shimmerProduct.hideShimmer();
+                        shimmerProduct.stopShimmer();
+                        shimmerProduct.setVisibility(View.GONE);
+                    }
                 } else {
-                    Log.e("findProductByParam", "Lỗi phản hồi không thành công");
+                    Log.e("findProductByParam", "response not successful");
                 }
-
             }
 
             @Override
             public void onFailure(Call<Page<ProductResponse>> call, Throwable t) {
-                Log.e("findProductByParam", "Lỗi kết nối" + t.getMessage());
+                Log.e("findProductByParam", "onFailure: " + t.getMessage());
             }
         });
-
     }
-
 
     @Override
     public void onClick(View view) {
@@ -302,13 +333,22 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
             case R.id.btnFilter:
                 showDialogFilter();
                 break;
+
             case R.id.btnSort:
                 showDialogSort();
                 break;
+
             case R.id.ivBack:
-                startActivity(new Intent(FullProductActivity.this,MainActivity.class));
+                startActivity(new Intent(FullProductActivity.this, MainActivity.class));
                 finish();
                 break;
+
+            case R.id.btnDeleteFilter:
+                getFullProduct(sort);
+                btnFilterOut.setVisibility(View.VISIBLE);
+                btnDeleteFilter.setVisibility(View.GONE);
+                break;
+
             default:
                 break;
 

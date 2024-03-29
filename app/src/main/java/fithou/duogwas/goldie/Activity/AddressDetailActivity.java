@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,13 +105,12 @@ public class AddressDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void updateUI(Long idAddress) {
-        if (idAddress == -1 ) {
+        if (idAddress == -1) {
             tvTittle.setText("ĐỊA CHỈ MỚI");
             btnUpdate.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
             btnCreate.setVisibility(View.VISIBLE);
         }
-
     }
 
     private int getPositionOfProvince(long idProvince) {
@@ -265,12 +265,14 @@ public class AddressDetailActivity extends AppCompatActivity implements View.OnC
                     if (userAdressResponse.getPrimaryAddres()) {
                         cbPrimary.setChecked(true);
                     }
+                } else {
+                    Log.e("getMyAddressDetail", "response not successful");
                 }
             }
 
             @Override
             public void onFailure(Call<UserAdressResponse> call, Throwable t) {
-
+                Log.e("getMyAddressDetail", "onFailure: " + t.getMessage());
             }
         });
     }
@@ -324,19 +326,18 @@ public class AddressDetailActivity extends AppCompatActivity implements View.OnC
                         finish();
                     } else {
                         startActivity(new Intent(AddressDetailActivity.this, MyAddressActivity.class));
+                        finish();
                         ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.SUCCESS, "Tạo địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                     }
 
                 } else {
-                    ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.ERROR, "Tạo địa chỉ không thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    Log.e("createMyAddress", "response not successful");
                 }
-
             }
 
             @Override
             public void onFailure(Call<UserAdressResponse> call, Throwable t) {
-                ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.ERROR, "Tạo địa chỉ ònail", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
-
+                Log.e("createMyAddress", "onFailure: " + t.getMessage());
             }
         });
 
@@ -380,19 +381,16 @@ public class AddressDetailActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onResponse(Call<UserAdressResponse> call, Response<UserAdressResponse> response) {
                 if (response.isSuccessful()) {
-                    UserAdressResponse result = response.body();
                     startActivity(new Intent(AddressDetailActivity.this, MyAddressActivity.class));
                     ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.SUCCESS, "Cập nhật địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 } else {
-                    ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.ERROR, "Cập nhật địa chỉ không thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    Log.e("updateMyAddress", "response not successful");
                 }
-
             }
 
             @Override
             public void onFailure(Call<UserAdressResponse> call, Throwable t) {
-                ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.ERROR, "Tạo địa chỉ ònail", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
-
+                Log.e("updateMyAddress", "onFailure: " + t.getMessage());
             }
         });
     }
@@ -409,13 +407,13 @@ public class AddressDetailActivity extends AppCompatActivity implements View.OnC
                     startActivity(new Intent(AddressDetailActivity.this, MyAddressActivity.class));
                     ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.SUCCESS, "Xóa địa chỉ thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 } else {
-                    ToastPerfect.makeText(AddressDetailActivity.this, ToastPerfect.INFORMATION, "Xóa địa chỉ ko thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    Log.e("deleteMyAddress", "response not successful");
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-
+                Log.e("deleteMyAddress", "onFailure: " + t.getMessage());
             }
         });
 
@@ -442,7 +440,6 @@ public class AddressDetailActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -455,6 +452,8 @@ public class AddressDetailActivity extends AppCompatActivity implements View.OnC
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ivBack:
+                Intent intent = new Intent(AddressDetailActivity.this, MyAddressActivity.class);
+                startActivity(intent);
                 finish();
                 break;
 
