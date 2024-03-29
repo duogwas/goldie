@@ -13,6 +13,10 @@ public class ProductImage implements Serializable {
 
     private Product product;
 
+    public ProductImage(String linkImage) {
+        this.linkImage = linkImage;
+    }
+
     public Long getId() {
         return id;
     }
