@@ -24,9 +24,12 @@ import fithou.duogwas.goldie.Response.TokenDto;
 import fithou.duogwas.goldie.Response.ErrorResponse;
 import fithou.duogwas.goldie.Retrofit.ApiUtils;
 import fithou.duogwas.goldie.Retrofit.UserService;
+import fithou.duogwas.goldie.Utils.DeviceTokenManager;
+import fithou.duogwas.goldie.Utils.UserManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.thanguit.toastperfect.ToastPerfect;
 
 public class ActiveAccountActivity extends AppCompatActivity implements View.OnClickListener {
     EditText edtInputCode1, edtInputCode2, edtInputCode3, edtInputCode4, edtInputCode5, edtInputCode6;
@@ -40,13 +43,13 @@ public class ActiveAccountActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_active_account);
-        AnhXa();
+        initView();
         getDataVerify();
         setOnClick();
         setupOtpInput();
     }
 
-    private void AnhXa() {
+    private void initView() {
         btnActive = findViewById(R.id.btnActive);
         edtInputCode1 = findViewById(R.id.edtInputCode1);
         edtInputCode2 = findViewById(R.id.edtInputCode2);
@@ -220,13 +223,16 @@ public class ActiveAccountActivity extends AppCompatActivity implements View.OnC
     }
 
     private void signInAfterVerify() {
-        LoginDto loginDto = new LoginDto(emailRegis, passwordRegis, "string");
+        String tokenFCM = DeviceTokenManager.getDeviceToken(ActiveAccountActivity.this);
+        LoginDto loginDto = new LoginDto(emailRegis, passwordRegis, tokenFCM);
         UserService userService = ApiUtils.getUserAPIService();
         Call<TokenDto> call1 = userService.SignIn(loginDto);
         call1.enqueue(new Callback<TokenDto>() {
             @Override
             public void onResponse(Call<TokenDto> call, Response<TokenDto> response) {
                 if (response.isSuccessful()) {
+                    TokenDto userSignIn = response.body();
+                    UserManager.saveUser(ActiveAccountActivity.this, "User", "MODE_PRIVATE", userSignIn);
                     Intent intent = new Intent(ActiveAccountActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         replaceFragment(new HomeFragment());
         countItemInCart();
 
-
         binding.bottomNavigationView.setBackground(null);
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {

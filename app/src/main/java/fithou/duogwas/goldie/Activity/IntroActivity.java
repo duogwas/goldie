@@ -1,30 +1,23 @@
 package fithou.duogwas.goldie.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import fithou.duogwas.goldie.Entity.User;
 import fithou.duogwas.goldie.R;
-import fithou.duogwas.goldie.Request.LoginDto;
-import fithou.duogwas.goldie.Response.ErrorResponse;
-import fithou.duogwas.goldie.Response.TokenDto;
-import fithou.duogwas.goldie.Retrofit.ApiUtils;
-import fithou.duogwas.goldie.Retrofit.UserService;
+import fithou.duogwas.goldie.Utils.DeviceTokenManager;
 import fithou.duogwas.goldie.Utils.UserManager;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import vn.thanguit.toastperfect.ToastPerfect;
 
 public class IntroActivity extends AppCompatActivity {
     TextView tvStart;
@@ -35,6 +28,7 @@ public class IntroActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_intro);
         AnhXa();
+        getDeviceToken();
         tvStartClick();
     }
 
@@ -55,5 +49,27 @@ public class IntroActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void getDeviceToken() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("TAG", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        Log.d("TAG", token);
+
+                        //save token
+                        DeviceTokenManager.saveDeviceToken(IntroActivity.this, token);
+                    }
+                });
     }
 }
