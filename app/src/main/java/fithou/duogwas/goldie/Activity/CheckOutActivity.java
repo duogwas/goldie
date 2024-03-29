@@ -491,6 +491,5 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
             default:
                 break;
         }
-
     }
 }

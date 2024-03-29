@@ -59,7 +59,6 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     //img slider
-    implementation 'com.github.AtikulSoftware:smart-slider:1.0'
     implementation 'com.github.smarteist:autoimageslider:1.4.0'
 
     //thư viện load image
@@ -72,8 +71,10 @@ dependencies {
     //lottie animation
     implementation 'com.airbnb.android:lottie:6.4.0'
 
+    //shimmer effect
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:32.7.4')
     implementation 'com.google.firebase:firebase-messaging:23.4.1'
-
 }

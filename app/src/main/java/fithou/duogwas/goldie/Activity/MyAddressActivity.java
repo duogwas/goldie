@@ -1,16 +1,19 @@
 package fithou.duogwas.goldie.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -30,6 +33,8 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
     FloatingActionButton btnCreateAddress;
     RecyclerView rcvMyAddress;
     ImageView ivBack;
+    ShimmerFrameLayout shimmerMyAddress;
+    ConstraintLayout clNoAddress;
     int checkIntent;
 
     @Override
@@ -47,6 +52,9 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
         ivBack = findViewById(R.id.ivBack);
         btnCreateAddress = findViewById(R.id.btnCreateAddress);
         rcvMyAddress = findViewById(R.id.rcvMyAddress);
+        clNoAddress = findViewById(R.id.clNoAddress);
+        shimmerMyAddress = findViewById(R.id.shimmerMyAddress);
+        shimmerMyAddress.startShimmer();
     }
 
     private void setOnClick() {
@@ -69,18 +77,29 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
             public void onResponse(Call<List<UserAdressResponse>> call, Response<List<UserAdressResponse>> response) {
                 if (response.isSuccessful()) {
                     List<UserAdressResponse> userAdressResponses = response.body();
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MyAddressActivity.this, LinearLayoutManager.VERTICAL, false);
-                    rcvMyAddress.setLayoutManager(linearLayoutManager);
-                    MyAddressAdapter myAddressAdapter = new MyAddressAdapter(userAdressResponses, MyAddressActivity.this,checkIntent);
-                    rcvMyAddress.setAdapter(myAddressAdapter);
+                    if(userAdressResponses.size()==0){
+                        clNoAddress.setVisibility(View.VISIBLE);
+                        shimmerMyAddress.hideShimmer();
+                        shimmerMyAddress.stopShimmer();
+                        shimmerMyAddress.setVisibility(View.GONE);
+                    }else {
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MyAddressActivity.this, LinearLayoutManager.VERTICAL, false);
+                        rcvMyAddress.setLayoutManager(linearLayoutManager);
+                        MyAddressAdapter myAddressAdapter = new MyAddressAdapter(userAdressResponses, MyAddressActivity.this, checkIntent);
+                        rcvMyAddress.setAdapter(myAddressAdapter);
+                        rcvMyAddress.setVisibility(View.VISIBLE);
+                        shimmerMyAddress.hideShimmer();
+                        shimmerMyAddress.stopShimmer();
+                        shimmerMyAddress.setVisibility(View.GONE);
+                    }
                 } else {
-                    Toast.makeText(MyAddressActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                    Log.e("getMyAddress", "response not successful");
                 }
             }
 
             @Override
             public void onFailure(Call<List<UserAdressResponse>> call, Throwable t) {
-                Toast.makeText(MyAddressActivity.this, "2", Toast.LENGTH_SHORT).show();
+                Log.e("getMyAddress", "onFailure: " + t.getMessage());
             }
         });
     }
@@ -93,7 +112,9 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
                 break;
 
             case R.id.btnCreateAddress:
-                startActivity(new Intent(MyAddressActivity.this, AddressDetailActivity.class));
+                Intent intent = new Intent(MyAddressActivity.this, AddressDetailActivity.class);
+                startActivity(intent);
+                finish();
                 break;
 
             default:

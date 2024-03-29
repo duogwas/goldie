@@ -1,16 +1,8 @@
 package fithou.duogwas.goldie.Fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +10,17 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.bdtopcoder.smart_slider.SliderAdapter;
-import com.bdtopcoder.smart_slider.SliderItem;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.SliderAnimations;
+import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,8 @@ import fithou.duogwas.goldie.Activity.FullProductActivity;
 import fithou.duogwas.goldie.Activity.MainActivity;
 import fithou.duogwas.goldie.Adapter.CategoryAdapter;
 import fithou.duogwas.goldie.Adapter.ProductAdapter;
+import fithou.duogwas.goldie.Adapter.ProductImageSliderAdapter;
+import fithou.duogwas.goldie.Entity.ProductImage;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.CategoryResponse;
 import fithou.duogwas.goldie.Response.Page;
@@ -42,12 +45,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFragment extends Fragment implements SearchView.OnQueryTextListener, View.OnClickListener {
-    ViewPager2 smartSlider;
+    SliderView smartSlider;
     TokenDto user;
     TextView tvHiName, tvSeeAllProduct;
     SearchView searchViewProduct;
     RecyclerView.Adapter adapterCategories, adapterProduct;
     RecyclerView rcvCategories, rcvNewProducts;
+    ShimmerFrameLayout shimmerProduct, shimmerCategory;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -64,11 +68,11 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView();
-        Slide();
+        sliderBanner();
         setOnClick();
-        LoadUserInfor();
-        LoadCategoriesList();
-        LoadProductList();
+        loadUserInfor();
+        loadCategoriesList();
+        loadProductList();
         refreshCountItemCart();
     }
 
@@ -78,13 +82,27 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         tvSeeAllProduct = getView().findViewById(R.id.tvSeeAllProduct);
         searchViewProduct = getView().findViewById(R.id.searchViewProduct);
         rcvNewProducts = getView().findViewById(R.id.rcvNewProducts);
+        rcvCategories = getView().findViewById(R.id.rcvCategories);
+        shimmerProduct = getView().findViewById(R.id.shimmerProduct);
+        shimmerProduct.startShimmer();
+        shimmerCategory = getView().findViewById(R.id.shimmerCategory);
+        shimmerCategory.startShimmer();
     }
 
-    private void Slide() {
-        List<SliderItem> sliderItems = new ArrayList<>();
-        sliderItems.add(new SliderItem(R.drawable.banner_1, "image 1"));
-        sliderItems.add(new SliderItem(R.drawable.banner_2, "image 2"));
-        smartSlider.setAdapter(new SliderAdapter(sliderItems, smartSlider, 3500));
+    private void sliderBanner() {
+        List<ProductImage> sliderItems = new ArrayList<>();
+        sliderItems.add(new ProductImage("https://res.cloudinary.com/dxketb89r/image/upload/v1711637484/banner_1_hzvxqm.png"));
+        sliderItems.add(new ProductImage("https://res.cloudinary.com/dxketb89r/image/upload/v1711637484/banner_1_hzvxqm.png"));
+
+        ProductImageSliderAdapter adapterImage = new ProductImageSliderAdapter(sliderItems, getContext());
+        smartSlider.setSliderAdapter(adapterImage);
+        smartSlider.setIndicatorAnimation(IndicatorAnimationType.WORM); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+        smartSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+        smartSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+        smartSlider.setIndicatorSelectedColor(Color.WHITE);
+        smartSlider.setIndicatorUnselectedColor(Color.GRAY);
+        smartSlider.setScrollTimeInSec(4); //set scroll delay in seconds :
+        smartSlider.startAutoCycle();
     }
 
     private void setOnClick() {
@@ -92,7 +110,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         searchViewProduct.setOnQueryTextListener(this);
     }
 
-    private void LoadUserInfor() {
+    private void loadUserInfor() {
         user = UserManager.getSavedUser(getContext(), "User", "MODE_PRIVATE", TokenDto.class);
         tvHiName.setText("Xin chào,\n" + user.getUser().getFullname());
     }
@@ -104,30 +122,36 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
         }
     }
 
-    private void LoadCategoriesList() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        rcvCategories = getView().findViewById(R.id.rcvCategories);
-        rcvCategories.setLayoutManager(linearLayoutManager);
+    private void loadCategoriesList() {
         CategoryService categoryService = ApiUtils.getCategoryAPIService();
         Call<List<CategoryResponse>> call = categoryService.GetCategoriesList();
         call.enqueue(new Callback<List<CategoryResponse>>() {
             @Override
             public void onResponse(Call<List<CategoryResponse>> call, Response<List<CategoryResponse>> response) {
-                List<CategoryResponse> categoryResponse = response.body();
-                adapterCategories = new CategoryAdapter(categoryResponse, getContext());
-                rcvCategories.setAdapter(adapterCategories);
+                if (response.isSuccessful()) {
+                    List<CategoryResponse> categoryResponse = response.body();
+                    rcvCategories.setVisibility(View.VISIBLE);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                    rcvCategories.setLayoutManager(linearLayoutManager);
+                    adapterCategories = new CategoryAdapter(categoryResponse, getContext());
+                    rcvCategories.setAdapter(adapterCategories);
+                    shimmerCategory.hideShimmer();
+                    shimmerCategory.stopShimmer();
+                    shimmerCategory.setVisibility(View.GONE);
+                } else {
+                    Log.e("LoadCategoriesListIndex", "response not successful");
+                }
+
             }
 
             @Override
             public void onFailure(Call<List<CategoryResponse>> call, Throwable t) {
-
+                Log.e("LoadCategoriesListIndex", "onFailure: " + t.getMessage());
             }
         });
     }
 
-    private void LoadProductList() {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
-        rcvNewProducts.setLayoutManager(gridLayoutManager);
+    private void loadProductList() {
         ProductService productService = ApiUtils.getProductAPIService();
         Call<Page<ProductResponse>> call = productService.getProductPage(0, 10, "");
         call.enqueue(new Callback<Page<ProductResponse>>() {
@@ -136,17 +160,23 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
                 if (response.isSuccessful()) {
                     Page<ProductResponse> page = response.body();
                     List<ProductResponse> product = page.getContent();
+                    rcvNewProducts.setVisibility(View.VISIBLE);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+                    rcvNewProducts.setLayoutManager(gridLayoutManager);
                     adapterProduct = new ProductAdapter(product, getContext());
                     rcvNewProducts.setAdapter(adapterProduct);
+                    shimmerProduct.hideShimmer();
+                    shimmerProduct.stopShimmer();
+                    shimmerProduct.setVisibility(View.GONE);
                 } else {
-                    Log.e("loi1", "loi k thanh cong");
+                    Log.e("loadProductListIndex", "response not successful");
                 }
 
             }
 
             @Override
             public void onFailure(Call<Page<ProductResponse>> call, Throwable t) {
-                Log.e("loi2", "loi k ket noi" + t.getMessage());
+                Log.e("loadProductListIndex", "onFailure: " + t.getMessage());
             }
         });
 
@@ -166,14 +196,14 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
                     ProductAdapter productAdapter = new ProductAdapter(product, getContext());
                     rcvNewProducts.setAdapter(productAdapter);
                 } else {
-                    Log.e("findProductByParam", "Lỗi phản hồi không thành công");
+                    Log.e("findProductByParam", "response not successful");
                 }
 
             }
 
             @Override
             public void onFailure(Call<Page<ProductResponse>> call, Throwable t) {
-                Log.e("findProductByParam", "Lỗi kết nối" + t.getMessage());
+                Log.e("findProductByParam", "onFailure: " + t.getMessage());
             }
         });
 
@@ -197,7 +227,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     @Override
     public boolean onQueryTextSubmit(String s) {
         if (s.length() == 0) {
-            LoadProductList();
+            loadProductList();
         } else {
             findProductByParam(s);
         }
@@ -207,7 +237,7 @@ public class HomeFragment extends Fragment implements SearchView.OnQueryTextList
     @Override
     public boolean onQueryTextChange(String s) {
         if (s.length() == 0) {
-            LoadProductList();
+            loadProductList();
         } else {
             findProductByParam(s);
         }
