@@ -106,6 +106,8 @@ public class ToReceiveOrderFragment extends Fragment {
                             MyOrderAdapter myOrderAdapter = new MyOrderAdapter(listInvoiceToReceive, getContext());
                             rcvOrder.setAdapter(myOrderAdapter);
                             rcvOrder.setVisibility(View.VISIBLE);
+                            clOrder.setVisibility(View.VISIBLE);
+                            clNoOrder.setVisibility(View.GONE);
                             shimmerMyOrder.hideShimmer();
                             shimmerMyOrder.stopShimmer();
                             shimmerMyOrder.setVisibility(View.GONE);

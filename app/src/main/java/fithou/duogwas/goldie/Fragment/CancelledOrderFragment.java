@@ -106,6 +106,8 @@ public class CancelledOrderFragment extends Fragment {
                             MyOrderAdapter myOrderAdapter = new MyOrderAdapter(listInvoiceCancelled, getContext());
                             rcvOrder.setAdapter(myOrderAdapter);
                             rcvOrder.setVisibility(View.VISIBLE);
+                            clOrder.setVisibility(View.VISIBLE);
+                            clNoOrder.setVisibility(View.GONE);
                             shimmerMyOrder.hideShimmer();
                             shimmerMyOrder.stopShimmer();
                             shimmerMyOrder.setVisibility(View.GONE);

@@ -104,6 +104,8 @@ public class ToPayOrderFragment extends Fragment {
                                 MyOrderAdapter myOrderAdapter = new MyOrderAdapter(listInvoiceToPay, getContext());
                                 rcvOrder.setAdapter(myOrderAdapter);
                                 rcvOrder.setVisibility(View.VISIBLE);
+                                clOrder.setVisibility(View.VISIBLE);
+                                clNoOrder.setVisibility(View.GONE);
                                 shimmerMyOrder.hideShimmer();
                                 shimmerMyOrder.stopShimmer();
                                 shimmerMyOrder.setVisibility(View.GONE);
