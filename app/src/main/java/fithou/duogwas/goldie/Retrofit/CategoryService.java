@@ -14,7 +14,7 @@ import retrofit2.http.Query;
 
 public interface CategoryService {
     @GET("category/public/findAllList")
-    Call<List<CategoryResponse>> GetCategoriesList();
+    Call<List<CategoryResponse>> getCategoriesList();
 
     @GET("category/public/findPrimaryCategory")
     Call<List<CategoryResponse>> findPrimaryCategory();

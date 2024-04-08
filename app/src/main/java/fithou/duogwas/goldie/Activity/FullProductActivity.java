@@ -229,7 +229,7 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
 
     private void loadCategoriesDialog(RecyclerView rcv) {
         CategoryService categoryService = ApiUtils.getCategoryAPIService();
-        Call<List<CategoryResponse>> call = categoryService.GetCategoriesList();
+        Call<List<CategoryResponse>> call = categoryService.getCategoriesList();
         call.enqueue(new Callback<List<CategoryResponse>>() {
             @Override
             public void onResponse(Call<List<CategoryResponse>> call, Response<List<CategoryResponse>> response) {
