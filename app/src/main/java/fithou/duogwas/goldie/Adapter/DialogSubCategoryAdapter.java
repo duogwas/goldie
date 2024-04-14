@@ -13,16 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import fithou.duogwas.goldie.Entity.Category;
 import fithou.duogwas.goldie.R;
-import fithou.duogwas.goldie.Response.CategoryResponse;
 
-public class DialogCategoryAdapter extends RecyclerView.Adapter<DialogCategoryAdapter.ViewHolder> {
-    List<CategoryResponse> categories;
+public class DialogSubCategoryAdapter extends RecyclerView.Adapter<DialogSubCategoryAdapter.ViewHolder> {
+    List<Category> categories;
     Context context;
     List<Long> id = new ArrayList<Long>();
 
-    public DialogCategoryAdapter(List<CategoryResponse> categoryResponses, Context context) {
-        this.categories = categoryResponses;
+    public DialogSubCategoryAdapter(List<Category> categories, Context context) {
+        this.categories = categories;
         this.context = context;
     }
 
@@ -41,28 +41,27 @@ public class DialogCategoryAdapter extends RecyclerView.Adapter<DialogCategoryAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category_dialog, parent, false);
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sub_category_dialog, parent, false);
         return new ViewHolder(inflate);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        CategoryResponse categoryResponse = categories.get(position);
-        if (categoryResponse == null) {
+        Category subCategories = categories.get(position);
+        if (subCategories == null) {
             return;
         }
 
-        holder.cbCategory.setText(categoryResponse.getName());
+        holder.cbCategory.setText(subCategories.getName());
+
         holder.cbCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Long idCategory = categoryResponse.getId();
+                Long idCategory = subCategories.getId();
                 if (holder.cbCategory.isChecked()) {
                     id.add(idCategory);
-//                    Toast.makeText(context, "id: " + id.toString(), Toast.LENGTH_SHORT).show();
                 } else {
                     id.remove(idCategory);
-//                    Toast.makeText(context, "id: " + id.toString(), Toast.LENGTH_SHORT).show();
                 }
                 if (onCbCategoryListener != null) {
                     onCbCategoryListener.onCheckBoxClick(id);

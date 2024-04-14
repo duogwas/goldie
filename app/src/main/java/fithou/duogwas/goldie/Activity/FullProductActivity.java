@@ -16,13 +16,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import fithou.duogwas.goldie.Adapter.DialogCategoryAdapter;
+import fithou.duogwas.goldie.Adapter.DialogPrimaryCategoryAdapter;
 import fithou.duogwas.goldie.Adapter.ProductAdapter;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.CategoryResponse;
@@ -55,7 +55,7 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
     ImageButton btnSort;
     ImageView ivBack;
     ConstraintLayout clNoProduct;
-    DialogCategoryAdapter dialogCategoryAdapter;
+    DialogPrimaryCategoryAdapter dialogPrimaryCategoryAdapter;
     ShimmerFrameLayout shimmerProduct;
     List<Long> listIdCategory = new ArrayList<Long>();
     double smallPrice, largePrice;
@@ -229,16 +229,16 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
 
     private void loadCategoriesDialog(RecyclerView rcv) {
         CategoryService categoryService = ApiUtils.getCategoryAPIService();
-        Call<List<CategoryResponse>> call = categoryService.getCategoriesList();
+        Call<List<CategoryResponse>> call = categoryService.findPrimaryCategory();
         call.enqueue(new Callback<List<CategoryResponse>>() {
             @Override
             public void onResponse(Call<List<CategoryResponse>> call, Response<List<CategoryResponse>> response) {
                 List<CategoryResponse> categoryResponse = response.body();
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
-                rcv.setLayoutManager(gridLayoutManager);
-                dialogCategoryAdapter = new DialogCategoryAdapter(categoryResponse, FullProductActivity.this);
-                rcv.setAdapter(dialogCategoryAdapter);
-                dialogCategoryAdapter.setOnCbCategoryListener(new DialogCategoryAdapter.OnCbCategoryListener() {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(FullProductActivity.this, LinearLayoutManager.VERTICAL, false);
+                rcv.setLayoutManager(linearLayoutManager);
+                dialogPrimaryCategoryAdapter = new DialogPrimaryCategoryAdapter(categoryResponse, FullProductActivity.this);
+                rcv.setAdapter(dialogPrimaryCategoryAdapter);
+                dialogPrimaryCategoryAdapter.setOnCbCategoryListener(new DialogPrimaryCategoryAdapter.OnCbCategoryListener() {
                     @Override
                     public void onCheckBoxClick(List<Long> idCategory) {
                         listIdCategory = idCategory;
