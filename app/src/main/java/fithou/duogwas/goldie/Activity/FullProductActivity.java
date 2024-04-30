@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,7 +36,9 @@ import java.util.List;
 import java.util.Locale;
 
 import fithou.duogwas.goldie.Adapter.DialogPrimaryCategoryAdapter;
+import fithou.duogwas.goldie.Adapter.DialogSubCategoryAdapter;
 import fithou.duogwas.goldie.Adapter.ProductAdapter;
+import fithou.duogwas.goldie.Entity.Category;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.CategoryResponse;
 import fithou.duogwas.goldie.Response.Page;
@@ -56,8 +59,10 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
     ImageView ivBack;
     ConstraintLayout clNoProduct;
     DialogPrimaryCategoryAdapter dialogPrimaryCategoryAdapter;
+    DialogSubCategoryAdapter dialogSubCategoryAdapter;
     ShimmerFrameLayout shimmerProduct;
     List<Long> listIdCategory = new ArrayList<Long>();
+    List<Category> subCategory = new ArrayList<Category>();
     double smallPrice, largePrice;
 
     @Override
@@ -107,6 +112,7 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
                     shimmerProduct.hideShimmer();
                     shimmerProduct.stopShimmer();
                     shimmerProduct.setVisibility(View.GONE);
+                    clNoProduct.setVisibility(View.GONE);
                 } else {
                     Log.e("getFullProduct", "response not successful");
                 }
@@ -229,13 +235,13 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
 
     private void loadCategoriesDialog(RecyclerView rcv) {
         CategoryService categoryService = ApiUtils.getCategoryAPIService();
-        Call<List<CategoryResponse>> call = categoryService.findPrimaryCategory();
+        Call<List<CategoryResponse>> call = categoryService.getCategoriesList();
         call.enqueue(new Callback<List<CategoryResponse>>() {
             @Override
             public void onResponse(Call<List<CategoryResponse>> call, Response<List<CategoryResponse>> response) {
                 List<CategoryResponse> categoryResponse = response.body();
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(FullProductActivity.this, LinearLayoutManager.VERTICAL, false);
-                rcv.setLayoutManager(linearLayoutManager);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
+                rcv.setLayoutManager(gridLayoutManager);
                 dialogPrimaryCategoryAdapter = new DialogPrimaryCategoryAdapter(categoryResponse, FullProductActivity.this);
                 rcv.setAdapter(dialogPrimaryCategoryAdapter);
                 dialogPrimaryCategoryAdapter.setOnCbCategoryListener(new DialogPrimaryCategoryAdapter.OnCbCategoryListener() {
@@ -269,17 +275,18 @@ public class FullProductActivity extends AppCompatActivity implements View.OnCli
                         shimmerProduct.setVisibility(View.GONE);
                     } else {
                         clNoProduct.setVisibility(View.GONE);
+                        shimmerProduct.hideShimmer();
+                        shimmerProduct.stopShimmer();
+                        shimmerProduct.setVisibility(View.GONE);
                         GridLayoutManager gridLayoutManager = new GridLayoutManager(FullProductActivity.this, 2);
                         rcvProduct.setLayoutManager(gridLayoutManager);
                         ProductAdapter productAdapter = new ProductAdapter(product, FullProductActivity.this);
                         rcvProduct.setAdapter(productAdapter);
                         rcvProduct.setVisibility(View.VISIBLE);
-                        shimmerProduct.hideShimmer();
-                        shimmerProduct.stopShimmer();
-                        shimmerProduct.setVisibility(View.GONE);
+                        Toast.makeText(FullProductActivity.this,listIdCategory.toString(),Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Log.e("filterProduct", "response not successful");
+                    Log.e("filterProduct", "response not successful, " + response.code());
                 }
             }
 

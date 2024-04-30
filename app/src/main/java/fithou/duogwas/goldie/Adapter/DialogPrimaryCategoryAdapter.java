@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
@@ -56,22 +57,22 @@ public class DialogPrimaryCategoryAdapter extends RecyclerView.Adapter<DialogPri
 
         holder.cbCategory.setText(categoryResponse.getName());
 
-        List<Category> categoriesSubList = categoryResponse.getCategories();
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
-        holder.rcvSubCategories.setLayoutManager(gridLayoutManager);
-        DialogSubCategoryAdapter adapterSubCategories = new DialogSubCategoryAdapter(categoriesSubList, context);
-        holder.rcvSubCategories.setAdapter(adapterSubCategories);
-        holder.rcvSubCategories.setVisibility(View.GONE);
+//        List<Category> categoriesSubList = categoryResponse.getCategories();
+//        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
+//        holder.rcvSubCategories.setLayoutManager(gridLayoutManager);
+//        DialogSubCategoryAdapter adapterSubCategories = new DialogSubCategoryAdapter(categoriesSubList, context, id);
+//        holder.rcvSubCategories.setAdapter(adapterSubCategories);
+//        holder.rcvSubCategories.setVisibility(View.GONE);
 
         holder.cbCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(holder.rcvSubCategories.getVisibility()==View.GONE){
-                    holder.rcvSubCategories.setVisibility(View.VISIBLE);
-                }
-                else {
-                    holder.rcvSubCategories.setVisibility(View.GONE);
-                }
+//                if(holder.rcvSubCategories.getVisibility()==View.GONE){
+//                    holder.rcvSubCategories.setVisibility(View.VISIBLE);
+//                }
+//                else {
+//                    holder.rcvSubCategories.setVisibility(View.GONE);
+//                }
 
                 Long idCategory = categoryResponse.getId();
                 if (holder.cbCategory.isChecked()) {
@@ -81,11 +82,10 @@ public class DialogPrimaryCategoryAdapter extends RecyclerView.Adapter<DialogPri
                 }
                 if (onCbCategoryListener != null) {
                     onCbCategoryListener.onCheckBoxClick(id);
+                    Toast.makeText(context,"id: " + id, Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-
     }
 
     @Override
@@ -95,12 +95,12 @@ public class DialogPrimaryCategoryAdapter extends RecyclerView.Adapter<DialogPri
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         AppCompatCheckBox cbCategory;
-        RecyclerView rcvSubCategories;
+//        RecyclerView rcvSubCategories;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             cbCategory = itemView.findViewById(R.id.cbCategory);
-            rcvSubCategories = itemView.findViewById(R.id.rcvSubCategories);
+//            rcvSubCategories = itemView.findViewById(R.id.rcvSubCategories);
         }
     }
 }

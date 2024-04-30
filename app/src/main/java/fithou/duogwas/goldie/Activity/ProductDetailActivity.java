@@ -44,6 +44,7 @@ import vn.thanguit.toastperfect.ToastPerfect;
 
 public class ProductDetailActivity extends AppCompatActivity implements View.OnClickListener {
     Long idProduct, idColorCart, idSizeCart;
+    Integer quantityAddToCart;
     Double priceProduct;
     SliderView imageSlider;
     ImageView ivBack;
@@ -167,8 +168,9 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
 
                 adapterSize.setOnSizeClickListener(new ProductSizeAdapter.OnSizeClickListener() {
                     @Override
-                    public void onSizeClick(Long idSize) {
+                    public void onSizeClick(Long idSize, Integer quantity) {
                         idSizeCart = idSize;
+                        quantityAddToCart = quantity;
                     }
                 });
             }
@@ -251,6 +253,11 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.ivMinus:
+                if (idColorCart == null) {
+                    ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.ERROR, "Vui lòng chọn màu sắc sản phẩm", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                } else if (idSizeCart == null) {
+                    ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.ERROR, "Vui lòng chọn kích thước sản phẩm", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                }
                 int number1 = parseInt(tvQuantity.getText().toString()) - 1;
                 if (number1 >= 1) {
                     tvQuantity.setText(String.valueOf(number1));
@@ -261,8 +268,20 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
                 break;
 
             case R.id.ivPlus:
+                if (idColorCart == null) {
+                    ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.ERROR, "Vui lòng chọn màu sắc sản phẩm", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                } else if (idSizeCart == null) {
+                    ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.ERROR, "Vui lòng chọn kích thước sản phẩm", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                }
                 int number2 = parseInt(tvQuantity.getText().toString()) + 1;
-                tvQuantity.setText(String.valueOf(number2));
+                if(number2 >= quantityAddToCart){
+                    ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.WARNING, "MAX", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                    tvQuantity.setText(String.valueOf(quantityAddToCart));
+                    return;
+                }
+                else {
+                    tvQuantity.setText(String.valueOf(number2));
+                }
                 NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
                 String formattedPrice = currencyFormat.format(priceProduct * number2);
                 tvTotalPrice.setText(formattedPrice);

@@ -38,7 +38,7 @@ public class ProductSizeAdapter extends RecyclerView.Adapter<ProductSizeAdapter.
     }
 
     public interface OnSizeClickListener {
-        void onSizeClick(Long idSize);
+        void onSizeClick(Long idSize, Integer quantity);
     }
 
     // Trong adapter của bạn, khởi tạo một instance của interface này
@@ -90,12 +90,13 @@ public class ProductSizeAdapter extends RecyclerView.Adapter<ProductSizeAdapter.
                     tvSizeName.setText(size.getSizeName());
                 }
                 Long idSize = size.getId();
+                Integer quantity = size.getQuantity();
                 if (onSizeClickListener != null) {
                     if (size.getQuantity() == 0) {
                         idSize = null;
-                        onSizeClickListener.onSizeClick(idSize);
+                        onSizeClickListener.onSizeClick(idSize, quantity);
                     } else {
-                        onSizeClickListener.onSizeClick(idSize);
+                        onSizeClickListener.onSizeClick(idSize, quantity);
                     }
                 }
             }
