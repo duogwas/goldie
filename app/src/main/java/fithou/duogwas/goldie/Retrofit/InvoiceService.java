@@ -33,4 +33,8 @@ public interface InvoiceService {
     Call<List<InvoiceDetailResponse>> getInvoiceDetail(@Header("Authorization") String authToken,
                                                        @Query("idInvoice") Long idInvoice);
 
+    @POST("invoice/user/cancel-invoice")
+    Call<InvoiceResponse> cancelInvoice(@Header("Authorization") String authToken,
+                                        @Query("idInvoice") Long idInvoice);
+
 }

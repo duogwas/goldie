@@ -226,8 +226,14 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
             if (cartProduct.getProduct().getId().equals(product.getId()) &&
                     cartProduct.getColor().getId().equals(color.getId()) &&
                     cartProduct.getSize().getId().equals(size.getId())) {
-                // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng
-                cartProduct.setQuantity(cartProduct.getQuantity() + quantity);
+                // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng, kiểm tra giỏ hàng đã = max trong kho chưa
+                if(cartProduct.getQuantity() == size.getQuantity()){
+                    ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.ERROR, "Đã đạt số lượng tối đa", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                }
+                else {
+                    cartProduct.setQuantity(cartProduct.getQuantity() + quantity);
+                    ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.SUCCESS, "Thêm vào giỏ hàng thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                }
                 productAlreadyInCart = true;
                 break;
             }
@@ -237,11 +243,12 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
         if (!productAlreadyInCart) {
             ProductCart productCart = new ProductCart(product, color, size, quantity);
             productCartList.add(productCart);
+            ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.SUCCESS, "Thêm vào giỏ hàng thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
         }
 
         // Lưu danh sách sản phẩm cart vào SharedPreferences
         CartManager.saveCart(this, productCartList);
-        ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.SUCCESS, "Thêm vào giỏ hàng thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+//        ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.SUCCESS, "Thêm vào giỏ hàng thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
     }
 
     @Override
@@ -273,18 +280,21 @@ public class ProductDetailActivity extends AppCompatActivity implements View.OnC
                 } else if (idSizeCart == null) {
                     ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.ERROR, "Vui lòng chọn kích thước sản phẩm", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                 }
-                int number2 = parseInt(tvQuantity.getText().toString()) + 1;
-                if(number2 >= quantityAddToCart){
-                    ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.WARNING, "MAX", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
-                    tvQuantity.setText(String.valueOf(quantityAddToCart));
-                    return;
-                }
                 else {
-                    tvQuantity.setText(String.valueOf(number2));
+                    int number2 = parseInt(tvQuantity.getText().toString()) + 1;
+                    if(number2 >= quantityAddToCart){
+                        ToastPerfect.makeText(ProductDetailActivity.this, ToastPerfect.WARNING, "MAX", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                        tvQuantity.setText(String.valueOf(quantityAddToCart));
+                        return;
+                    }
+                    else {
+                        tvQuantity.setText(String.valueOf(number2));
+                    }
+                    NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                    String formattedPrice = currencyFormat.format(priceProduct * number2);
+                    tvTotalPrice.setText(formattedPrice);
                 }
-                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-                String formattedPrice = currencyFormat.format(priceProduct * number2);
-                tvTotalPrice.setText(formattedPrice);
+
                 break;
 
             case R.id.clDescription:

@@ -23,6 +23,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fithou.duogwas.goldie.Entity.ProductSize;
 import fithou.duogwas.goldie.R;
+import vn.thanguit.toastperfect.ToastPerfect;
 
 
 public class ProductSizeAdapter extends RecyclerView.Adapter<ProductSizeAdapter.ViewHolder> {
@@ -85,7 +86,7 @@ public class ProductSizeAdapter extends RecyclerView.Adapter<ProductSizeAdapter.
                 selectedItemPosition = position;
                 notifyDataSetChanged();
                 if (size.getQuantity() == 0) {
-                    tvSizeName.setText("");
+                    tvSizeName.setText("Sản phẩm đã hết size");
                 } else {
                     tvSizeName.setText(size.getSizeName());
                 }
@@ -94,6 +95,7 @@ public class ProductSizeAdapter extends RecyclerView.Adapter<ProductSizeAdapter.
                 if (onSizeClickListener != null) {
                     if (size.getQuantity() == 0) {
                         idSize = null;
+                        ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Sản phẩm đã hết size", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                         onSizeClickListener.onSizeClick(idSize, quantity);
                     } else {
                         onSizeClickListener.onSizeClick(idSize, quantity);

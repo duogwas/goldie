@@ -1,15 +1,24 @@
 package fithou.duogwas.goldie.Activity;
 
+import static fithou.duogwas.goldie.Entity.PayType.PAYMENT_DELIVERY;
 import static fithou.duogwas.goldie.Entity.PayType.PAYMENT_MOMO;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,6 +44,7 @@ import fithou.duogwas.goldie.Utils.UserManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import vn.thanguit.toastperfect.ToastPerfect;
 
 public class OrderDetailActivity extends AppCompatActivity {
     ImageView ivBack;
@@ -43,8 +53,10 @@ public class OrderDetailActivity extends AppCompatActivity {
     TextView tvTimeOrder, tvTimeShip, tvTimeComplete, tvTimeCancel;
     ConstraintLayout clVoucher, clTimeShip, clTimeComplete, clTimeCancel;
     RecyclerView rcvProductCart;
+    AppCompatButton btnCancel;
     List<InvoiceDetailResponse> detailResponseList = new ArrayList<>();
     Long idInvoice;
+    Long idToPay = Long.valueOf(1);
     Long idToReceive = Long.valueOf(3);
     Long idCompleted = Long.valueOf(4);
     Long idCancelled = Long.valueOf(5);
@@ -65,9 +77,17 @@ public class OrderDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialogDelete();
+            }
+        });
     }
 
     private void initView() {
+        btnCancel = findViewById(R.id.btnCancel);
         ivBack = findViewById(R.id.ivBack);
         tvOrderId = findViewById(R.id.tvOrderId);
         tvStatus = findViewById(R.id.tvStatus);
@@ -117,6 +137,12 @@ public class OrderDetailActivity extends AppCompatActivity {
                     tvStatus.setText(invoiceStatuses.get(invoiceStatuses.size() - 1).getStatus().getName());
                     SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                     tvStatusDate.setText(formatter.format(invoiceStatuses.get(invoiceStatuses.size() - 1).getCreatedDate()));
+
+                    //ẩn hiện nút hủy
+                    if(invoiceStatuses.get(invoiceStatuses.size() - 1).getStatus().getId().equals(idToPay)
+                            && invoiceResponse.getPayType() == PAYMENT_DELIVERY){
+                        btnCancel.setVisibility(View.VISIBLE);
+                    }
 
                     //địa chỉ nhận hàng
                     tvAddress.setText(invoiceResponse.getUserAddress().getFullname() + "\n"
@@ -219,5 +245,56 @@ public class OrderDetailActivity extends AppCompatActivity {
             total += item.getQuantity() * item.getPrice();
         }
         tvTotalProductPrice.setText(formatPrice(total));
+    }
+
+    private void cancelOrder(Long id) {
+        TokenDto user = UserManager.getSavedUser(OrderDetailActivity.this, "User", "MODE_PRIVATE", TokenDto.class);
+        String token = user.getToken();
+        InvoiceService invoiceService = ApiUtils.getInvoiceAPIService();
+        Call<InvoiceResponse> call = invoiceService.cancelInvoice("Bearer " + token, id);
+        call.enqueue(new Callback<InvoiceResponse>() {
+            @Override
+            public void onResponse(Call<InvoiceResponse> call, Response<InvoiceResponse> response) {
+                if (response.isSuccessful()) {
+                    startActivity(new Intent(OrderDetailActivity.this, MyOrderActivity.class));
+                    ToastPerfect.makeText(OrderDetailActivity.this, ToastPerfect.SUCCESS, "Hủy đơn hàng thành công", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
+                } else {
+                    Log.e("cancelOrder", "response not successful");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<InvoiceResponse> call, Throwable t) {
+                Log.e("cancelOrder", "onFailure: " + t.getMessage());
+            }
+        });
+    }
+
+    private void showDialogDelete() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_cancel_order);
+        AppCompatButton btnDelete = dialog.findViewById(R.id.btnDelete);
+        AppCompatButton btnCancel = dialog.findViewById(R.id.btnCancel);
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelOrder(idInvoice);
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations = R.style.BottomDialogAnimation;
+        dialog.getWindow().setGravity(Gravity.CENTER);
     }
 }
