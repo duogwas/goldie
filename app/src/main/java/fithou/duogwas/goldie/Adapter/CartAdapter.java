@@ -25,6 +25,7 @@ import fithou.duogwas.goldie.Entity.ProductCart;
 import fithou.duogwas.goldie.R;
 import fithou.duogwas.goldie.Response.ProductResponse;
 import fithou.duogwas.goldie.Utils.CartManager;
+import vn.thanguit.toastperfect.ToastPerfect;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     List<ProductCart> productCart;
@@ -83,7 +84,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 if (cart.getQuantity() >= cart.getSize().getQuantity()) {
-                    Toast.makeText(context, "max rồi", Toast.LENGTH_SHORT).show();
+                    ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Đã đạt số lượng tối đa", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                     return;
                 }
                 cart.setQuantity(cart.getQuantity() + 1);
@@ -101,7 +102,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 if (cart.getQuantity() <= 1) {
-                    Toast.makeText(context, "min rồi", Toast.LENGTH_SHORT).show();
+                    ToastPerfect.makeText(context, ToastPerfect.INFORMATION, "Đã đạt số lượng tối thiểu", ToastPerfect.TOP, ToastPerfect.LENGTH_SHORT).show();
                     return;
                 }
                 cart.setQuantity(cart.getQuantity() - 1);

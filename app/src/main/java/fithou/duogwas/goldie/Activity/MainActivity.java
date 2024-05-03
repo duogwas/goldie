@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             case 3:
                 replaceFragment(new CategoryFragment());
                 break;
-                
+
             default:
                 replaceFragment(new HomeFragment());
         }
