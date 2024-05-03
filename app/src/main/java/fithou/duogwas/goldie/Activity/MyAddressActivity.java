@@ -36,6 +36,7 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
     ShimmerFrameLayout shimmerMyAddress;
     ConstraintLayout clNoAddress;
     int checkIntent;
+    int createAddShip = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +78,12 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
             public void onResponse(Call<List<UserAdressResponse>> call, Response<List<UserAdressResponse>> response) {
                 if (response.isSuccessful()) {
                     List<UserAdressResponse> userAdressResponses = response.body();
-                    if(userAdressResponses.size()==0){
+                    if (userAdressResponses.size() == 0) {
                         clNoAddress.setVisibility(View.VISIBLE);
                         shimmerMyAddress.hideShimmer();
                         shimmerMyAddress.stopShimmer();
                         shimmerMyAddress.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MyAddressActivity.this, LinearLayoutManager.VERTICAL, false);
                         rcvMyAddress.setLayoutManager(linearLayoutManager);
                         MyAddressAdapter myAddressAdapter = new MyAddressAdapter(userAdressResponses, MyAddressActivity.this, checkIntent);
@@ -108,11 +109,16 @@ public class MyAddressActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ivBack:
-                startActivity(new Intent(MyAddressActivity.this, MainActivity.class));
+//                startActivity(new Intent(MyAddressActivity.this, MainActivity.class));
+                Intent intent1 = new Intent(MyAddressActivity.this, MainActivity.class);
+                intent1.putExtra("idIntent", 1);
+                startActivity(intent1);
+                finish();
                 break;
 
             case R.id.btnCreateAddress:
                 Intent intent = new Intent(MyAddressActivity.this, AddressDetailActivity.class);
+                intent.putExtra("createAddShip", 1);
                 startActivity(intent);
                 finish();
                 break;

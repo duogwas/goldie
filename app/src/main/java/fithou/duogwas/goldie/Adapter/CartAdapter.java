@@ -59,8 +59,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             return;
         }
 
+//        Glide.with(context)
+//                .load(cart.getProduct().getImageBanner())
+//                .into(holder.ivImage);
         Glide.with(context)
-                .load(cart.getProduct().getImageBanner())
+                .load(cart.getColor().getLinkImage())
                 .into(holder.ivImage);
         holder.tvName.setText(cart.getProduct().getName());
         holder.tvOption.setText(cart.getColor().getColorName() + ", " + cart.getSize().getSizeName());

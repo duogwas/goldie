@@ -445,7 +445,10 @@ public class CheckOutActivity extends AppCompatActivity implements View.OnClickL
         Intent intent;
         switch (view.getId()) {
             case R.id.ivBack:
-                startActivity(new Intent(this, MainActivity.class));
+                intent = new Intent(CheckOutActivity.this, MainActivity.class);
+                intent.putExtra("idIntent", 2);
+                startActivity(intent);
+                finish();
                 break;
 
             case R.id.tvPayOnDelivery:

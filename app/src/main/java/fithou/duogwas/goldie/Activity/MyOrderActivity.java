@@ -33,7 +33,10 @@ public class MyOrderActivity extends AppCompatActivity {
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MyOrderActivity.this, MainActivity.class));
+                Intent intent = new Intent(MyOrderActivity.this, MainActivity.class);
+                intent.putExtra("idIntent", 1);
+                startActivity(intent);
+                finish();
             }
         });
     }

@@ -1,6 +1,7 @@
 package fithou.duogwas.goldie.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     BottomNavigationView bottomNavigationView;
     int countItem = 0;
+    int idIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,27 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(binding.getRoot());
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        replaceFragment(new HomeFragment());
+
+        Intent intent = getIntent();
+        idIntent = intent.getIntExtra("idIntent", -1);
+
+        switch (idIntent) {
+            case 1:
+                replaceFragment(new ProfileFragment());
+                break;
+
+            case 2:
+                replaceFragment(new CartFragment());
+                break;
+
+            case 3:
+                replaceFragment(new CategoryFragment());
+                break;
+                
+            default:
+                replaceFragment(new HomeFragment());
+        }
+
         countItemInCart();
 
         binding.bottomNavigationView.setBackground(null);
