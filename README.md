@@ -109,7 +109,7 @@ Màn hình bao gồm các thành phần như sau:
 
 6. Danh sách các sản phẩm mới nhất
 
-t. Thanh điều hướng với 4 menu chính: Trang chủ, Danh mục, Giỏ hàng và Cá nhân
+7. Thanh điều hướng với 4 menu chính: Trang chủ, Danh mục, Giỏ hàng và Cá nhân
 
 ## [**4. Danh sách sản phẩm**](#4-fullproduct)
 
