@@ -73,12 +73,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         String formattedPrice = currencyFormat.format(cart.getProduct().getPrice());
         holder.tvTotalPrice.setText(formattedPrice);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "id: " + cart.getId(), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(context, "id: " + cart.getId(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         holder.ivPlus.setOnClickListener(new View.OnClickListener() {
             @Override
