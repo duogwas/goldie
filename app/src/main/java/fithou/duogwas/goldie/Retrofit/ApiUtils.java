@@ -9,10 +9,10 @@ public class ApiUtils {
     }
 
 //        public static final String BASE_URL = "http://172.16.15.154:8080/api/"; //cty
-//    public static final String BASE_URL = "http://192.168.1.15:8080/api/";  //home
+    public static final String BASE_URL = "http://192.168.1.15:8080/api/";  //home
 //    public static final String BASE_URL = "http://172.20.10.2:8080/api/";  //4g
 //    public static final String BASE_URL = "http://192.168.2.129:8080/api/";  //home2
-public static final String BASE_URL = "http://192.168.100.177:8080/api/";  //home
+//    public static final String BASE_URL = "http://192.168.100.177:8080/api/";  //home
 
 
     public static UserService getUserAPIService() {
